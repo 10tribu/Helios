@@ -201,7 +201,7 @@ export const en: Translations = {
     liveForecastOk:
       "Forecast: a provider is attached to every solar source.",
     liveForecastPartial:
-      "Forecast: {n} of your solar sources has no forecast provider, so its share of the curve is missing. Add Helios Forecast to it under Settings > Dashboards > Energy > Solar panels.",
+      "Forecast: a provider is missing on {n} of your solar sources, so the curve announces less than you will produce. Add Helios Forecast there, under Settings > Dashboards > Energy > Solar panels.",
     liveForecastMissing:
       "Forecast: no provider on your solar source, so the curve stops at now. Install Helios Forecast and attach it under Settings > Dashboards > Energy > Solar panels.",
     openEnergyConfig: "Open Energy configuration",

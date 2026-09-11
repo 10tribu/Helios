@@ -191,7 +191,7 @@ export const fi: Translations = {
     liveForecastOk:
       "Ennuste: jokaiseen aurinkolähteeseen on liitetty tarjoaja.",
     liveForecastPartial:
-      "Ennuste: {n} aurinkolähteelläsi ei ole tarjoajaa, joten sen osuus käyrästä puuttuu. Lisää siihen Helios Forecast kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
+      "Ennuste: {n} aurinkolähteeltäsi puuttuu tarjoaja, joten käyrä lupaa vähemmän kuin tuotat. Lisää sinne Helios Forecast kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
     liveForecastMissing:
       "Ennuste: aurinkolähteelläsi ei ole tarjoajaa, joten käyrä pysähtyy nykyhetkeen. Asenna Helios Forecast ja liitä se kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
     openEnergyConfig: "Avaa Energia-asetukset",

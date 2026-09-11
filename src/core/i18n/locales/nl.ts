@@ -191,7 +191,7 @@ export const nl: Translations = {
     liveForecastOk:
       "Voorspelling: aan elke zonnebron is een aanbieder gekoppeld.",
     liveForecastPartial:
-      "Voorspelling: {n} van uw zonnebronnen heeft geen aanbieder, dus dat deel van de curve ontbreekt. Voeg er Helios Forecast aan toe via Instellingen > Dashboards > Energie > Zonnepanelen.",
+      "Voorspelling: er ontbreekt een aanbieder op {n} van uw zonnebronnen, dus de curve kondigt minder aan dan u zult opwekken. Voeg daar Helios Forecast toe via Instellingen > Dashboards > Energie > Zonnepanelen.",
     liveForecastMissing:
       "Voorspelling: geen aanbieder op uw zonnebron, dus de curve stopt bij nu. Installeer Helios Forecast en koppel het via Instellingen > Dashboards > Energie > Zonnepanelen.",
     openEnergyConfig: "Energieconfiguratie openen",

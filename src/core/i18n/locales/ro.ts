@@ -190,7 +190,7 @@ export const ro: Translations = {
     liveForecastOk:
       "Prognoză: fiecărei surse solare îi este atașat un furnizor.",
     liveForecastPartial:
-      "Prognoză: {n} dintre sursele dumneavoastră solare nu are furnizor, deci lipsește partea sa din curbă. Adăugați-i Helios Forecast în Setări > Tablouri de bord > Energie > Panouri solare.",
+      "Prognoză: lipsește un furnizor la {n} dintre sursele dumneavoastră solare, deci curba anunță mai puțin decât veți produce. Adăugați acolo Helios Forecast în Setări > Tablouri de bord > Energie > Panouri solare.",
     liveForecastMissing:
       "Prognoză: niciun furnizor pe sursa solară, deci curba se oprește la prezent. Instalați Helios Forecast și atașați-l în Setări > Tablouri de bord > Energie > Panouri solare.",
     openEnergyConfig: "Deschide configuratia Energie",

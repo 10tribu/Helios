@@ -190,7 +190,7 @@ export const nb: Translations = {
     liveForecastOk:
       "Prognose: hver solkilde har en leverandør tilknyttet.",
     liveForecastPartial:
-      "Prognose: {n} av solkildene dine mangler leverandør, så dens del av kurven uteblir. Legg til Helios Forecast der under Innstillinger > Dashbord > Energi > Solcellepaneler.",
+      "Prognose: det mangler en leverandør på {n} av solkildene dine, så kurven lover mindre enn du kommer til å produsere. Legg til Helios Forecast der under Innstillinger > Dashbord > Energi > Solcellepaneler.",
     liveForecastMissing:
       "Prognose: ingen leverandør på solkilden din, så kurven stopper ved nå. Installer Helios Forecast og knytt den til under Innstillinger > Dashbord > Energi > Solcellepaneler.",
     openEnergyConfig: "Åpne energikonfigurasjon",

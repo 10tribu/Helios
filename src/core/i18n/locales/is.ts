@@ -191,7 +191,7 @@ export const isLocale: Translations = {
     liveForecastOk:
       "Spá: hverri sólarlind er tengdur veitandi.",
     liveForecastPartial:
-      "Spá: {n} af sólarlindum þínum hefur engan veitanda, svo hennar hluta ferilsins vantar. Bættu Helios Forecast við hana undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
+      "Spá: veitanda vantar á {n} af sólarlindum þínum, svo ferillinn boðar minna en þú munt framleiða. Bættu Helios Forecast við þar undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
     liveForecastMissing:
       "Spá: enginn veitandi á sólarlindinni, svo ferillinn stöðvast við núið. Settu upp Helios Forecast og tengdu hann undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
     openEnergyConfig: "Opna orkustillingar",

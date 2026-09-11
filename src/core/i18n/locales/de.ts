@@ -191,7 +191,7 @@ export const de: Translations = {
     liveForecastOk:
       "Prognose: jeder Solarquelle ist ein Anbieter zugeordnet.",
     liveForecastPartial:
-      "Prognose: {n} Ihrer Solarquellen hat keinen Anbieter, ihr Anteil an der Kurve fehlt daher. Fügen Sie dort Helios Forecast hinzu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
+      "Prognose: bei {n} Ihrer Solarquellen fehlt ein Anbieter, die Kurve sagt daher weniger an, als Sie erzeugen werden. Fügen Sie dort Helios Forecast hinzu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
     liveForecastMissing:
       "Prognose: kein Anbieter an Ihrer Solarquelle, die Kurve endet daher bei jetzt. Installieren Sie Helios Forecast und ordnen Sie es zu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
     openEnergyConfig: "Energie-Konfiguration öffnen",

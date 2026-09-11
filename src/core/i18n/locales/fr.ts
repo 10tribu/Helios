@@ -191,7 +191,7 @@ export const fr: Translations = {
     liveForecastOk:
       "Prévision : un fournisseur est attaché à chaque source solaire.",
     liveForecastPartial:
-      "Prévision : {n} de vos sources solaires n'a pas de fournisseur, sa part de la courbe manque donc. Ajoutez-y Helios Forecast dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
+      "Prévision : il manque un fournisseur sur {n} de vos sources solaires, la courbe annonce donc moins que ce que vous produirez. Ajoutez-y Helios Forecast dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
     liveForecastMissing:
       "Prévision : aucun fournisseur sur votre source solaire, la courbe s'arrête donc au présent. Installez Helios Forecast et attachez-le dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
     openEnergyConfig: "Ouvrir la configuration Énergie",

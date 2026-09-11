@@ -192,7 +192,7 @@ export const lt: Translations = {
     liveForecastOk:
       "Prognozė: kiekvienam saulės šaltiniui priskirtas teikėjas.",
     liveForecastPartial:
-      "Prognozė: {n} jūsų saulės šaltinių neturi teikėjo, todėl trūksta jo kreivės dalies. Pridėkite jam Helios Forecast: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
+      "Prognozė: {n} jūsų saulės šaltinių trūksta teikėjo, todėl kreivė žada mažiau, nei pagaminsite. Ten pridėkite Helios Forecast: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
     liveForecastMissing:
       "Prognozė: saulės šaltinis neturi teikėjo, todėl kreivė sustoja ties dabartimi. Įdiekite Helios Forecast ir priskirkite jį: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
     openEnergyConfig: "Atidaryti Energijos konfigūraciją",

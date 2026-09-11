@@ -192,7 +192,7 @@ export const es: Translations = {
     liveForecastOk:
       "Previsión: cada fuente solar tiene un proveedor asignado.",
     liveForecastPartial:
-      "Previsión: {n} de sus fuentes solares no tiene proveedor, por lo que falta su parte de la curva. Añádale Helios Forecast en Ajustes > Paneles > Energía > Paneles solares.",
+      "Previsión: falta un proveedor en {n} de sus fuentes solares, así que la curva anuncia menos de lo que producirá. Añada ahí Helios Forecast en Ajustes > Paneles > Energía > Paneles solares.",
     liveForecastMissing:
       "Previsión: ninguna fuente solar tiene proveedor, así que la curva se detiene en el presente. Instale Helios Forecast y asígnelo en Ajustes > Paneles > Energía > Paneles solares.",
     openEnergyConfig: "Abrir configuración de Energía",

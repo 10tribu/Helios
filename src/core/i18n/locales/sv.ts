@@ -190,7 +190,7 @@ export const sv: Translations = {
     liveForecastOk:
       "Prognos: varje solkälla har en leverantör kopplad.",
     liveForecastPartial:
-      "Prognos: {n} av dina solkällor saknar leverantör, så dess del av kurvan fattas. Lägg till Helios Forecast där under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
+      "Prognos: en leverantör saknas på {n} av dina solkällor, så kurvan utlovar mindre än du kommer att producera. Lägg till Helios Forecast där under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
     liveForecastMissing:
       "Prognos: ingen leverantör på din solkälla, så kurvan stannar vid nu. Installera Helios Forecast och koppla det under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
     openEnergyConfig: "Öppna energikonfiguration",

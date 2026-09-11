@@ -191,7 +191,7 @@ export const et: Translations = {
     liveForecastOk:
       "Prognoos: igale päikeseallikale on lisatud pakkuja.",
     liveForecastPartial:
-      "Prognoos: {n} teie päikeseallikatest on pakkujata, seega puudub tema osa kõverast. Lisage sellele Helios Forecast: Seaded > Töölauad > Energia > Päikesepaneelid.",
+      "Prognoos: {n} teie päikeseallikal puudub pakkuja, seega lubab kõver vähem, kui te toodate. Lisage sinna Helios Forecast: Seaded > Töölauad > Energia > Päikesepaneelid.",
     liveForecastMissing:
       "Prognoos: päikeseallikal pole pakkujat, seega kõver lõpeb praegusega. Paigaldage Helios Forecast ja lisage see: Seaded > Töölauad > Energia > Päikesepaneelid.",
     openEnergyConfig: "Ava energia seadistus",

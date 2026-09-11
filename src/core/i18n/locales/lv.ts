@@ -192,7 +192,7 @@ export const lv: Translations = {
     liveForecastOk:
       "Prognoze: katram saules avotam ir piesaistīts sniedzējs.",
     liveForecastPartial:
-      "Prognoze: {n} no jūsu saules avotiem nav sniedzēja, tāpēc trūkst tā līknes daļas. Pievienojiet tam Helios Forecast: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
+      "Prognoze: {n} no jūsu saules avotiem trūkst sniedzēja, tāpēc līkne sola mazāk, nekā jūs saražosiet. Pievienojiet tur Helios Forecast: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
     liveForecastMissing:
       "Prognoze: saules avotam nav sniedzēja, tāpēc līkne apstājas tagadnē. Instalējiet Helios Forecast un piesaistiet to: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
     openEnergyConfig: "Atvērt enerģijas konfigurāciju",

@@ -190,7 +190,7 @@ export const sl: Translations = {
     liveForecastOk:
       "Napoved: vsakemu sončnemu viru je dodeljen ponudnik.",
     liveForecastPartial:
-      "Napoved: {n} vaših sončnih virov nima ponudnika, zato manjka njegov del krivulje. Dodajte mu Helios Forecast v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
+      "Napoved: pri {n} vaših sončnih virih manjka ponudnik, zato krivulja napoveduje manj, kot boste proizvedli. Tam dodajte Helios Forecast v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
     liveForecastMissing:
       "Napoved: sončni vir nima ponudnika, zato se krivulja ustavi pri zdaj. Namestite Helios Forecast in ga dodelite v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
     openEnergyConfig: "Odpri nastavitve Energije",

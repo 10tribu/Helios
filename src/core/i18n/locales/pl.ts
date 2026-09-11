@@ -191,7 +191,7 @@ export const pl: Translations = {
     liveForecastOk:
       "Prognoza: każde źródło słoneczne ma przypisanego dostawcę.",
     liveForecastPartial:
-      "Prognoza: {n} z Twoich źródeł słonecznych nie ma dostawcy, więc brakuje jego części krzywej. Dodaj do niego Helios Forecast w Ustawienia > Pulpity > Energia > Panele słoneczne.",
+      "Prognoza: brakuje dostawcy w {n} z Twoich źródeł słonecznych, więc krzywa zapowiada mniej, niż wyprodukujesz. Dodaj tam Helios Forecast w Ustawienia > Pulpity > Energia > Panele słoneczne.",
     liveForecastMissing:
       "Prognoza: brak dostawcy w źródle słonecznym, więc krzywa kończy się na teraz. Zainstaluj Helios Forecast i przypisz go w Ustawienia > Pulpity > Energia > Panele słoneczne.",
     openEnergyConfig: "Otwórz konfigurację Energii",

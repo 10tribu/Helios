@@ -192,7 +192,7 @@ export const cs: Translations = {
     liveForecastOk:
       "Předpověď: ke každému solárnímu zdroji je připojen poskytovatel.",
     liveForecastPartial:
-      "Předpověď: {n} z vašich solárních zdrojů nemá poskytovatele, jeho část křivky tedy chybí. Přidejte k němu Helios Forecast v Nastavení > Panely > Energie > Solární panely.",
+      "Předpověď: u {n} z vašich solárních zdrojů chybí poskytovatel, křivka tedy ohlašuje méně, než vyrobíte. Přidejte tam Helios Forecast v Nastavení > Panely > Energie > Solární panely.",
     liveForecastMissing:
       "Předpověď: solární zdroj nemá poskytovatele, křivka tedy končí přítomností. Nainstalujte Helios Forecast a připojte jej v Nastavení > Panely > Energie > Solární panely.",
     openEnergyConfig: "Otevřít nastavení energie",

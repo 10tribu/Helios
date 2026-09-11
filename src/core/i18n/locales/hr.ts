@@ -191,7 +191,7 @@ export const hr: Translations = {
     liveForecastOk:
       "Prognoza: svakom solarnom izvoru pridružen je pružatelj.",
     liveForecastPartial:
-      "Prognoza: {n} vaših solarnih izvora nema pružatelja pa nedostaje njegov dio krivulje. Dodajte mu Helios Forecast u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
+      "Prognoza: kod {n} vaših solarnih izvora nedostaje pružatelj pa krivulja najavljuje manje nego što ćete proizvesti. Ondje dodajte Helios Forecast u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
     liveForecastMissing:
       "Prognoza: solarni izvor nema pružatelja pa krivulja staje na sada. Instalirajte Helios Forecast i pridružite ga u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
     openEnergyConfig: "Otvori konfiguraciju energije",

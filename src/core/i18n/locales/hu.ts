@@ -192,7 +192,7 @@ export const hu: Translations = {
     liveForecastOk:
       "Előrejelzés: minden napelemes forráshoz tartozik szolgáltató.",
     liveForecastPartial:
-      "Előrejelzés: {n} napelemes forrásához nincs szolgáltató, így hiányzik a görbe rá eső része. Adja hozzá a Helios Forecastot a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
+      "Előrejelzés: {n} napelemes forrásánál hiányzik a szolgáltató, így a görbe kevesebbet jelez előre, mint amennyit termelni fog. Adja hozzá ott a Helios Forecastot a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
     liveForecastMissing:
       "Előrejelzés: nincs szolgáltató a napelemes forráson, így a görbe a jelennél megáll. Telepítse a Helios Forecastot, és rendelje hozzá a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
     openEnergyConfig: "Energia beállítások megnyitása",
