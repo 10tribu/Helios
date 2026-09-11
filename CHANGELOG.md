@@ -9,6 +9,17 @@ and the project follows a date-based versioning scheme (`YEAR.MONTH.PATCH`).
 
 ## 2026.9.5
 
+### Fixed: the grid chips come back on a dashboard wired the new way
+
+Home Assistant has written the live-power sensor of an Energy source three ways over time: at the
+top of the source as `stat_rate`, at the top as `power_config`, and, since the dashboard's power
+rework, inside a `power[]` array whose entries carry their own. Helios read the first two. A
+dashboard written entirely in the newest shape therefore carries nothing where the card looked, and
+the card reported "no live power sensor" for a grid whose sensor Home Assistant's own tile was
+showing at that moment, hiding the import and export chips (reported in #440). All three shapes are
+read now, for grid, battery and solar alike, and an entity repeated at both levels of one entry is
+counted once rather than summed into the live figure twice.
+
 ### Changed: the basemap is painted in levels of detail
 
 The ground under your home was one canvas, 2816 pixels square, about 30 MB of

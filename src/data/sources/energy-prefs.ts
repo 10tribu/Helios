@@ -369,12 +369,13 @@ export async function refreshHaDailyTotals(host: HaDailyTotalsHost): Promise<voi
 //consumer.
 //
 //Source shapes:
-//  - solar:   { type: 'solar', stat_energy_from, stat_rate?, config_entry_solar_forecast? }
-//  - grid:    { type: 'grid', stat_energy_from, stat_energy_to?, stat_rate?, power_config? }
-//  - battery: { type: 'battery', stat_energy_from, stat_energy_to, stat_soc?, power_config? }
+//  - solar:   { type: 'solar', stat_energy_from, stat_rate?, power?, config_entry_solar_forecast? }
+//  - grid:    { type: 'grid', stat_energy_from, stat_energy_to?, stat_rate?, power_config?, power? }
+//  - battery: { type: 'battery', stat_energy_from, stat_energy_to, stat_soc?, power_config?, power? }
 //
-//HA exposes the live-power slot in two shapes: `power_config.stat_rate` and the top-level grid `stat_rate`. Both are
-//read so any encountered config maps cleanly.
+//HA has written the live-power slot three ways: a top-level `stat_rate`, a top-level `power_config`, and a `power[]`
+//array of entries each carrying their own. All three are read (collectRateSlots) so any encountered config maps
+//cleanly, including one written entirely in the newest shape.
 export function parseEnergyPrefs(prefs: {
     energy_sources?: Record<string, unknown>[];
     device_consumption?: Record<string, unknown>[];
@@ -396,10 +397,11 @@ export function parseEnergyPrefs(prefs: {
         if (type === 'solar')
         {
             pushStrings(src['stat_energy_from'], out.solarStatEnergyFroms);
-            const rate = pickFirstString(src['stat_rate']);
-            if (rate)
+            //Solar has no sign to flip, so only the entities matter. The `power[]` array is read here too: a
+            //dashboard written in the newest shape carries nothing at the top of its source.
+            for (const slot of collectRateSlots(src, 'grid'))
             {
-                out.solarStatRates.push(rate);
+                out.solarStatRates.push(slot.entity);
             }
             //Forecast provider config entries on this solar source. May be a string or a list.
             const fc = src['config_entry_solar_forecast'];
@@ -498,20 +500,12 @@ export function parseEnergyPrefs(prefs: {
                     out.gridExportPriceNumbers.push(n);
                 }
             }
-            const directRate = pickFirstString(src['stat_rate']);
-            if (directRate)
+            for (const slot of collectRateSlots(src, 'grid'))
             {
-                out.gridStatRates.push(directRate);
-            }
-            else
-            {
-                for (const slot of collectPowerConfigRates(src['power_config'], 'grid'))
+                out.gridStatRates.push(slot.entity);
+                if (slot.inverted)
                 {
-                    out.gridStatRates.push(slot.entity);
-                    if (slot.inverted)
-                    {
-                        out.invertedRateEntities.push(slot.entity);
-                    }
+                    out.invertedRateEntities.push(slot.entity);
                 }
             }
         }
@@ -537,11 +531,14 @@ export function parseEnergyPrefs(prefs: {
             //Battery live power: prefer the `power_config` rate slots; a source with none falls back to its
             //top-level `stat_rate` (the common HA battery config, a net-power sensor). Only a source with NEITHER
             //counts as rate-less, which hides the live power readout (batterySourcesWithoutRate).
-            const batteryRates = collectPowerConfigRates(src['power_config'], 'battery');
+            //Every shape, the `power[]` array included: a battery wired in the newest Energy format carries
+            //nothing at the top of its source, and counting it as rate-less hides the live readout.
+            const batteryRates = collectRateSlots(src, 'battery');
             if (batteryRates.length > 0)
             {
                 for (const slot of batteryRates)
                 {
+                    //HA's battery rate is discharge-positive; flip it to the card's charge-positive convention.
                     out.batteryStatRates.push(slot.entity);
                     bank.rates.push(slot.entity);
                     if (slot.inverted)
@@ -552,18 +549,7 @@ export function parseEnergyPrefs(prefs: {
             }
             else
             {
-                const topRate = pickFirstString(src['stat_rate']);
-                if (topRate)
-                {
-                    //HA's battery stat_rate is discharge-positive; flip it to the card's charge-positive convention.
-                    out.batteryStatRates.push(topRate);
-                    bank.rates.push(topRate);
-                    out.invertedRateEntities.push(topRate);
-                }
-                else
-                {
-                    out.batterySourcesWithoutRate += 1;
-                }
+                out.batterySourcesWithoutRate += 1;
             }
             out.batteryBanks.push(bank);
         }
@@ -638,6 +624,44 @@ function collectPowerConfigRates(raw: unknown, flavor: 'grid' | 'battery'): { en
     if (toEntity)
     {
         out.push({ entity: toEntity, inverted: flavor === 'grid' });
+    }
+    return out;
+}
+
+
+//Every live-power slot a source carries, whatever shape the core wrote it in. HA has used three over time:
+//the slot at the top of the source (`stat_rate` or `power_config`), and, from the Energy dashboard's power
+//rework, a `power[]` array whose entries each hold their own `power_config` and/or `stat_rate`. A config
+//written in the new shape has NOTHING at the top level, so a reader that only looks there reports a source
+//with no live sensor while the dashboard shows one (#440). All three are read, and the result de-duped,
+//because the new shape repeats the same entity at both levels of its own entry.
+function collectRateSlots(src: Record<string, unknown>, flavor: 'grid' | 'battery'): { entity: string; inverted: boolean }[]
+{
+    const out: { entity: string; inverted: boolean }[] = [];
+    const add = (slots: { entity: string; inverted: boolean }[]): void =>
+    {
+        for (const slot of slots)
+        {
+            if (!out.some((seen) => seen.entity === slot.entity))
+            {
+                out.push(slot);
+            }
+        }
+    };
+    const direct = pickFirstString(src['stat_rate']);
+    if (direct)
+    {
+        add([{ entity: direct, inverted: flavor === 'battery' }]);
+    }
+    add(collectPowerConfigRates(src['power_config'], flavor));
+    for (const slot of asRecordArray(src['power']))
+    {
+        const nested = pickFirstString(slot['stat_rate']);
+        if (nested)
+        {
+            add([{ entity: nested, inverted: flavor === 'battery' }]);
+        }
+        add(collectPowerConfigRates(slot['power_config'], flavor));
     }
     return out;
 }

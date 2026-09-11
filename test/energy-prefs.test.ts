@@ -231,3 +231,67 @@ describe('subscribeEnergyPrefs non-admin retry storm (#415)', () =>
         expect(host._energyPrefsUnsub).toBeDefined();
     });
 });
+
+//The Energy dashboard's power rework moved the live-power slot into a `power[]` array on each source. A
+//dashboard written that way carries nothing at the top of the source, so a reader that only looks there
+//reports "no live power sensor" while HA's own tile shows one (#440).
+describe('live power slot, every shape the core has written', () =>
+{
+    it('reads the grid sensor from the power[] array', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:              'grid',
+                flow_from:         [{ stat_energy_from: 'sensor.import' }],
+                flow_to:           [{ stat_energy_to: 'sensor.export' }],
+                power:             [{ power_config: { stat_rate: 'sensor.grid_power' }, stat_rate: 'sensor.grid_power' }],
+            }],
+        });
+        expect(out.gridStatRates).toEqual(['sensor.grid_power']);
+    });
+
+    it('still reads the older top-level and power_config shapes', () =>
+    {
+        const top = parseEnergyPrefs({ energy_sources: [{ type: 'grid', stat_rate: 'sensor.old_top' }] });
+        expect(top.gridStatRates).toEqual(['sensor.old_top']);
+
+        const cfg = parseEnergyPrefs({ energy_sources: [{ type: 'grid', power_config: { stat_rate: 'sensor.old_cfg' } }] });
+        expect(cfg.gridStatRates).toEqual(['sensor.old_cfg']);
+    });
+
+    it('does not count the same entity twice when an entry repeats it', () =>
+    {
+        //The new shape writes the entity at both levels of its own entry, which would otherwise be summed
+        //into the live grid figure twice.
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:  'grid',
+                power: [{ power_config: { stat_rate: 'sensor.grid_power' }, stat_rate: 'sensor.grid_power' }],
+            }],
+        });
+        expect(out.gridStatRates).toEqual(['sensor.grid_power']);
+    });
+
+    it('reads a battery wired in the new shape, and keeps HA discharge-positive flipped', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:              'battery',
+                stat_energy_from:  'sensor.batt_out',
+                stat_energy_to:    'sensor.batt_in',
+                power:             [{ power_config: { stat_rate: 'sensor.batt_power' } }],
+            }],
+        });
+        expect(out.batteryStatRates).toEqual(['sensor.batt_power']);
+        expect(out.batterySourcesWithoutRate).toBe(0);
+        expect(out.invertedRateEntities).toContain('sensor.batt_power');
+    });
+
+    it('reads a solar source wired in the new shape', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{ type: 'solar', stat_energy_from: 'sensor.pv', power: [{ stat_rate: 'sensor.pv_power' }] }],
+        });
+        expect(out.solarStatRates).toEqual(['sensor.pv_power']);
+    });
+});

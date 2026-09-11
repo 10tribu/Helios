@@ -376,7 +376,11 @@ in this section.
 Helios does not take per-card entity keys. It subscribes to `energy/get_prefs`
 and resolves the solar / grid / battery / forecast slots from the user's Energy
 dashboard config, the same slots the official Energy card reads, re-fetching on
-`energy_preferences_updated`. **Measured values only**: live chips read the
+`energy_preferences_updated`. A source's live-power slot is read in every shape
+the core has written it: `stat_rate` and `power_config` at the top of the source,
+and the `power[]` array of the dashboard's power rework, whose entries carry their
+own (`collectRateSlots`). A config written only in the newest shape would otherwise
+read as a source with no live sensor. **Measured values only**: live chips read the
 configured live power sensors directly (`sumLiveWatts` in `data/source-fetch.ts`,
 SI-normalised, summed across every wired source); a value is never derived from a
 cumulative energy meter. The past curves read the recorder's pre-computed `change`
