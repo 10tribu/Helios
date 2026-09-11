@@ -187,6 +187,12 @@ export const da: Translations = {
     liveHomeOk: "Hjemmets forbrug: vises, udledt af live-familierne ovenfor.",
     liveHomeNote:
       "Hjemmets forbrug vises, når hver konfigureret familie ovenfor har sin live-sensor.",
+    liveForecastOk:
+      "Prognose: hver solkilde har en udbyder tilknyttet.",
+    liveForecastPartial:
+      "Prognose: {n} af dine solkilder har ingen udbyder, så dens del af kurven mangler. Tilføj Helios Forecast til den under Indstillinger > Betjeningspaneler > Energi > Solpaneler.",
+    liveForecastMissing:
+      "Prognose: ingen udbyder på din solkilde, så kurven stopper ved nu. Installer Helios Forecast og tilknyt den under Indstillinger > Betjeningspaneler > Energi > Solpaneler.",
     openEnergyConfig: "Åbn energikonfiguration",
     buildingsSection: "Hjem & bygninger",
     buildingsHint:

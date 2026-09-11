@@ -188,6 +188,12 @@ export const fr: Translations = {
       "Consommation de la maison : affichée, dérivée des familles live ci-dessus.",
     liveHomeNote:
       "La consommation de la maison s'affiche dès que chaque famille configurée ci-dessus a son capteur live.",
+    liveForecastOk:
+      "Prévision : un fournisseur est attaché à chaque source solaire.",
+    liveForecastPartial:
+      "Prévision : {n} de vos sources solaires n'a pas de fournisseur, sa part de la courbe manque donc. Ajoutez-y Helios Forecast dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
+    liveForecastMissing:
+      "Prévision : aucun fournisseur sur votre source solaire, la courbe s'arrête donc au présent. Installez Helios Forecast et attachez-le dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
     openEnergyConfig: "Ouvrir la configuration Énergie",
     buildingsSection: "Maison & bâtiments",
     buildingsHint:

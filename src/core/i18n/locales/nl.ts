@@ -188,6 +188,12 @@ export const nl: Translations = {
       "Huishoudelijk verbruik: getoond, afgeleid van de bovenstaande live families.",
     liveHomeNote:
       "Huishoudelijk verbruik: verschijnt zodra elke hierboven geconfigureerde familie zijn live sensor heeft.",
+    liveForecastOk:
+      "Voorspelling: aan elke zonnebron is een aanbieder gekoppeld.",
+    liveForecastPartial:
+      "Voorspelling: {n} van uw zonnebronnen heeft geen aanbieder, dus dat deel van de curve ontbreekt. Voeg er Helios Forecast aan toe via Instellingen > Dashboards > Energie > Zonnepanelen.",
+    liveForecastMissing:
+      "Voorspelling: geen aanbieder op uw zonnebron, dus de curve stopt bij nu. Installeer Helios Forecast en koppel het via Instellingen > Dashboards > Energie > Zonnepanelen.",
     openEnergyConfig: "Energieconfiguratie openen",
     buildingsSection: "Huis & gebouwen",
     buildingsHint:

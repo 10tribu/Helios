@@ -187,6 +187,12 @@ export const ro: Translations = {
     liveHomeOk: "Consum casa: afisat, derivat din familiile live de mai sus.",
     liveHomeNote:
       "Consum casa: apare de indata ce fiecare familie configurata mai sus are senzorul sau live.",
+    liveForecastOk:
+      "Prognoză: fiecărei surse solare îi este atașat un furnizor.",
+    liveForecastPartial:
+      "Prognoză: {n} dintre sursele dumneavoastră solare nu are furnizor, deci lipsește partea sa din curbă. Adăugați-i Helios Forecast în Setări > Tablouri de bord > Energie > Panouri solare.",
+    liveForecastMissing:
+      "Prognoză: niciun furnizor pe sursa solară, deci curba se oprește la prezent. Instalați Helios Forecast și atașați-l în Setări > Tablouri de bord > Energie > Panouri solare.",
     openEnergyConfig: "Deschide configuratia Energie",
     buildingsSection: "Casa si cladiri",
     buildingsHint:

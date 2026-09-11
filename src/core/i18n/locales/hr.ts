@@ -188,6 +188,12 @@ export const hr: Translations = {
       "Potrošnja doma: prikazana, izvedena iz gornjih obitelji uživo.",
     liveHomeNote:
       "Potrošnja doma pojavljuje se čim svaka gore konfigurirana obitelj ima svoj senzor uživo.",
+    liveForecastOk:
+      "Prognoza: svakom solarnom izvoru pridružen je pružatelj.",
+    liveForecastPartial:
+      "Prognoza: {n} vaših solarnih izvora nema pružatelja pa nedostaje njegov dio krivulje. Dodajte mu Helios Forecast u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
+    liveForecastMissing:
+      "Prognoza: solarni izvor nema pružatelja pa krivulja staje na sada. Instalirajte Helios Forecast i pridružite ga u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
     openEnergyConfig: "Otvori konfiguraciju energije",
     buildingsSection: "Dom i zgrade",
     buildingsHint:

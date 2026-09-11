@@ -198,6 +198,12 @@ export const en: Translations = {
       "Home consumption: shown, derived from the live families above.",
     liveHomeNote:
       "Home consumption: appears once every configured family above has its live sensor.",
+    liveForecastOk:
+      "Forecast: a provider is attached to every solar source.",
+    liveForecastPartial:
+      "Forecast: {n} of your solar sources has no forecast provider, so its share of the curve is missing. Add Helios Forecast to it under Settings > Dashboards > Energy > Solar panels.",
+    liveForecastMissing:
+      "Forecast: no provider on your solar source, so the curve stops at now. Install Helios Forecast and attach it under Settings > Dashboards > Energy > Solar panels.",
     openEnergyConfig: "Open Energy configuration",
     buildingsSection: "Home & buildings",
     buildingsHint:

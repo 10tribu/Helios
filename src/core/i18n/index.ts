@@ -213,6 +213,9 @@ export interface Translations
         liveBatteryAbsent:        string;
         liveHomeOk:               string;
         liveHomeNote:             string;
+        liveForecastOk:           string;
+        liveForecastPartial:      string;
+        liveForecastMissing:      string;
         //Deep link on a non-OK status line to Home Assistant's Energy configuration.
         openEnergyConfig:         string;
         //Surrounding buildings: cluster radius, neighbour opacity, base tint.

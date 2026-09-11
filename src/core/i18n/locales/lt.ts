@@ -189,6 +189,12 @@ export const lt: Translations = {
       "Namų suvartojimas: rodomas, gaunamas iš aukščiau esančių gyvų šeimų.",
     liveHomeNote:
       "Namų suvartojimas atsiranda, kai kiekviena aukščiau sukonfigūruota šeima turi savo gyvą jutiklį.",
+    liveForecastOk:
+      "Prognozė: kiekvienam saulės šaltiniui priskirtas teikėjas.",
+    liveForecastPartial:
+      "Prognozė: {n} jūsų saulės šaltinių neturi teikėjo, todėl trūksta jo kreivės dalies. Pridėkite jam Helios Forecast: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
+    liveForecastMissing:
+      "Prognozė: saulės šaltinis neturi teikėjo, todėl kreivė sustoja ties dabartimi. Įdiekite Helios Forecast ir priskirkite jį: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
     openEnergyConfig: "Atidaryti Energijos konfigūraciją",
     buildingsSection: "Namai ir pastatai",
     buildingsHint:

@@ -44,6 +44,11 @@ export interface EnergyDefaults
     //the live readout then shows nothing rather than a partial sum that silently drops a bank; scrub and curves
     //still net the directional meters.
     batterySourcesWithoutRate: number;
+    //Solar SOURCES declared in the dashboard, and how many of them carry no forecast provider
+    //(`config_entry_solar_forecast`). A source without one contributes nothing to the forecast curve, and the
+    //card has no way to guess it should: the editor's status panel says so rather than leaving a silent gap.
+    solarSources: number;
+    solarSourcesWithoutForecast: number;
     //Entity ids whose raw value reads opposite to the card's canonical sign (battery: positive = charging, grid:
     //positive = import). HA's conventions: battery `stat_rate` is discharge-positive (flips), grid `stat_rate`
     //import-positive (no flip); directional from/to slots flip on the opposing side. Full mapping in
@@ -121,6 +126,8 @@ export function freshEnergyDefaults(): EnergyDefaults
         batteryStatSocs:        [],
         batteryBanks:           [],
         batterySourcesWithoutRate: 0,
+        solarSources: 0,
+        solarSourcesWithoutForecast: 0,
         invertedRateEntities:   [],
         solarForecastEntryIds:  [],
         gridName:               '',
@@ -403,21 +410,37 @@ export function parseEnergyPrefs(prefs: {
             {
                 out.solarStatRates.push(slot.entity);
             }
-            //Forecast provider config entries on this solar source. May be a string or a list.
+            //Forecast provider config entries on this solar source. May be a string or a list. Counted per
+            //SOURCE as well as collected: a dashboard with two arrays and a provider on only one of them draws
+            //half a forecast, which looks like a bad forecast rather than a missing one.
+            out.solarSources += 1;
             const fc = src['config_entry_solar_forecast'];
+            let onThisSource = 0;
             if (Array.isArray(fc))
             {
                 for (const id of fc)
                 {
-                    if (typeof id === 'string' && id.trim() !== '' && !out.solarForecastEntryIds.includes(id.trim()))
+                    if (typeof id === 'string' && id.trim() !== '')
                     {
-                        out.solarForecastEntryIds.push(id.trim());
+                        onThisSource += 1;
+                        if (!out.solarForecastEntryIds.includes(id.trim()))
+                        {
+                            out.solarForecastEntryIds.push(id.trim());
+                        }
                     }
                 }
             }
-            else if (typeof fc === 'string' && fc.trim() !== '' && !out.solarForecastEntryIds.includes(fc.trim()))
+            else if (typeof fc === 'string' && fc.trim() !== '')
             {
-                out.solarForecastEntryIds.push(fc.trim());
+                onThisSource += 1;
+                if (!out.solarForecastEntryIds.includes(fc.trim()))
+                {
+                    out.solarForecastEntryIds.push(fc.trim());
+                }
+            }
+            if (onThisSource === 0)
+            {
+                out.solarSourcesWithoutForecast += 1;
             }
         }
         else if (type === 'grid')

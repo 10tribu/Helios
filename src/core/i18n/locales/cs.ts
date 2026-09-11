@@ -189,6 +189,12 @@ export const cs: Translations = {
       "Spotřeba domácnosti: zobrazena, odvozena z výše uvedených živých rodin.",
     liveHomeNote:
       "Spotřeba domácnosti: objeví se, jakmile má každá výše nastavená rodina svůj živý senzor.",
+    liveForecastOk:
+      "Předpověď: ke každému solárnímu zdroji je připojen poskytovatel.",
+    liveForecastPartial:
+      "Předpověď: {n} z vašich solárních zdrojů nemá poskytovatele, jeho část křivky tedy chybí. Přidejte k němu Helios Forecast v Nastavení > Panely > Energie > Solární panely.",
+    liveForecastMissing:
+      "Předpověď: solární zdroj nemá poskytovatele, křivka tedy končí přítomností. Nainstalujte Helios Forecast a připojte jej v Nastavení > Panely > Energie > Solární panely.",
     openEnergyConfig: "Otevřít nastavení energie",
     buildingsSection: "Domov a budovy",
     buildingsHint:

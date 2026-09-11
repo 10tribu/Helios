@@ -295,3 +295,57 @@ describe('live power slot, every shape the core has written', () =>
         expect(out.solarStatRates).toEqual(['sensor.pv_power']);
     });
 });
+
+//The forecast curve is drawn per solar source, from the provider attached to it in the Energy dashboard.
+//Installing Helios Forecast is not enough, and nothing told the user so: the card simply drew no future.
+describe('forecast provider, counted per solar source', () =>
+{
+    it('counts a solar source that carries no forecast provider', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{ type: 'solar', stat_energy_from: 'sensor.pv' }],
+        });
+        expect(out.solarSources).toBe(1);
+        expect(out.solarSourcesWithoutForecast).toBe(1);
+        expect(out.solarForecastEntryIds).toEqual([]);
+    });
+
+    it('counts none missing when every source carries one', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [
+                { type: 'solar', stat_energy_from: 'sensor.pv_east', config_entry_solar_forecast: 'entry_east' },
+                { type: 'solar', stat_energy_from: 'sensor.pv_west', config_entry_solar_forecast: ['entry_west'] },
+            ],
+        });
+        expect(out.solarSources).toBe(2);
+        expect(out.solarSourcesWithoutForecast).toBe(0);
+        expect(out.solarForecastEntryIds).toEqual(['entry_east', 'entry_west']);
+    });
+
+    it('spots the half-wired dashboard, which draws half a curve', () =>
+    {
+        //Two arrays, a provider on one of them: the forecast is present but short, which reads as a bad
+        //forecast rather than a missing one. This is the case worth naming.
+        const out = parseEnergyPrefs({
+            energy_sources: [
+                { type: 'solar', stat_energy_from: 'sensor.pv_east', config_entry_solar_forecast: 'entry_east' },
+                { type: 'solar', stat_energy_from: 'sensor.pv_west' },
+            ],
+        });
+        expect(out.solarSources).toBe(2);
+        expect(out.solarSourcesWithoutForecast).toBe(1);
+    });
+
+    it('does not count the same provider twice when two sources share it', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [
+                { type: 'solar', stat_energy_from: 'sensor.a', config_entry_solar_forecast: 'one' },
+                { type: 'solar', stat_energy_from: 'sensor.b', config_entry_solar_forecast: 'one' },
+            ],
+        });
+        expect(out.solarForecastEntryIds).toEqual(['one']);
+        expect(out.solarSourcesWithoutForecast).toBe(0);
+    });
+});

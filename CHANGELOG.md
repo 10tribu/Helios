@@ -9,6 +9,15 @@ and the project follows a date-based versioning scheme (`YEAR.MONTH.PATCH`).
 
 ## 2026.9.5
 
+### Changed: the editor says whether a forecast is actually attached
+
+The configuration panel at the top of the editor checked the live power sensor of every family and
+nothing else, so it could show four green ticks to someone whose card drew no forecast at all: the
+curve ahead of "now" comes from the provider attached to each solar source in the Energy dashboard,
+and installing Helios-Forecast does not attach it. The panel now has a fifth line for it, and it
+counts per source rather than overall, because a dashboard with two arrays and a provider on one of
+them draws half a curve, which reads as a bad forecast rather than a missing one.
+
 ### Fixed: the grid chips come back on a dashboard wired the new way
 
 Home Assistant has written the live-power sensor of an Energy source three ways over time: at the

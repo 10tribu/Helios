@@ -188,6 +188,12 @@ export const fi: Translations = {
       "Kodin kulutus: näytetään, johdettu yllä olevista live-perheistä.",
     liveHomeNote:
       "Kodin kulutus näkyy, kun jokaisella yllä määritetyllä perheellä on live-anturinsa.",
+    liveForecastOk:
+      "Ennuste: jokaiseen aurinkolähteeseen on liitetty tarjoaja.",
+    liveForecastPartial:
+      "Ennuste: {n} aurinkolähteelläsi ei ole tarjoajaa, joten sen osuus käyrästä puuttuu. Lisää siihen Helios Forecast kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
+    liveForecastMissing:
+      "Ennuste: aurinkolähteelläsi ei ole tarjoajaa, joten käyrä pysähtyy nykyhetkeen. Asenna Helios Forecast ja liitä se kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
     openEnergyConfig: "Avaa Energia-asetukset",
     buildingsSection: "Koti & rakennukset",
     buildingsHint:

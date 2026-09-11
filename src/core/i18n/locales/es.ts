@@ -189,6 +189,12 @@ export const es: Translations = {
       "Consumo del hogar: mostrado, derivado de las familias en directo anteriores.",
     liveHomeNote:
       "Consumo del hogar: aparece cuando cada familia configurada arriba tiene su sensor en directo.",
+    liveForecastOk:
+      "Previsión: cada fuente solar tiene un proveedor asignado.",
+    liveForecastPartial:
+      "Previsión: {n} de sus fuentes solares no tiene proveedor, por lo que falta su parte de la curva. Añádale Helios Forecast en Ajustes > Paneles > Energía > Paneles solares.",
+    liveForecastMissing:
+      "Previsión: ninguna fuente solar tiene proveedor, así que la curva se detiene en el presente. Instale Helios Forecast y asígnelo en Ajustes > Paneles > Energía > Paneles solares.",
     openEnergyConfig: "Abrir configuración de Energía",
     buildingsSection: "Casa y edificios",
     buildingsHint:

@@ -189,6 +189,12 @@ export const lv: Translations = {
       "Mājas patēriņš: rādīts, iegūts no iepriekš minētajām reāllaika saimēm.",
     liveHomeNote:
       "Mājas patēriņš parādās, tiklīdz katrai iepriekš konfigurētajai saimei ir savs reāllaika sensors.",
+    liveForecastOk:
+      "Prognoze: katram saules avotam ir piesaistīts sniedzējs.",
+    liveForecastPartial:
+      "Prognoze: {n} no jūsu saules avotiem nav sniedzēja, tāpēc trūkst tā līknes daļas. Pievienojiet tam Helios Forecast: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
+    liveForecastMissing:
+      "Prognoze: saules avotam nav sniedzēja, tāpēc līkne apstājas tagadnē. Instalējiet Helios Forecast un piesaistiet to: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
     openEnergyConfig: "Atvērt enerģijas konfigurāciju",
     buildingsSection: "Māja un ēkas",
     buildingsHint:

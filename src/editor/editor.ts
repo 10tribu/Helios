@@ -398,6 +398,14 @@ export class HeliosCardEditor extends LitElement
         const gridLive     = d.gridStatRates.length > 0 && !gridFlagged;
         const batteryLive  = !batteryLiveIsBucketSourced(d);
 
+        //The forecast curve is drawn per solar SOURCE, from the provider attached to it in the Energy dashboard.
+        //Installing Helios-Forecast is not enough and nothing else says so: the card simply draws no future, which
+        //reads as a broken forecast rather than an unattached one.
+        const solarSources = this._energyDefaults?.solarSources ?? 0;
+        const noForecast   = this._energyDefaults?.solarSourcesWithoutForecast ?? 0;
+        const forecastWired = solarSources > 0 && noForecast === 0;
+        const forecastPartial = noForecast > 0 && noForecast < solarSources;
+
         //Home consumption is derived: it needs every family the user DID configure to expose its live sensor.
         const homeReady = (solarWired || gridWired || batteryWired)
             && (!solarWired   || solarLive)
@@ -432,6 +440,12 @@ export class HeliosCardEditor extends LitElement
                 ${this._liveStatusLine(homeReady, false, homeReady
         ? (t.editor.liveHomeOk)
         : (t.editor.liveHomeNote))}
+
+                ${solarWired ? this._liveStatusLine(forecastWired, false, forecastWired
+        ? (t.editor.liveForecastOk)
+        : (forecastPartial
+            ? (t.editor.liveForecastPartial).replace('{n}', String(noForecast))
+            : (t.editor.liveForecastMissing))) : nothing}
 
                 <div class="live-config-link-row">${this._energyConfigLink()}</div>
             </div>

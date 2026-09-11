@@ -188,6 +188,12 @@ export const isLocale: Translations = {
       "Heimilisnotkun: sýnd, reiknuð út frá lifandi fjölskyldunum hér fyrir ofan.",
     liveHomeNote:
       "Heimilisnotkun: birtist um leið og hver stillt fjölskylda hér fyrir ofan hefur sinn lifandi skynjara.",
+    liveForecastOk:
+      "Spá: hverri sólarlind er tengdur veitandi.",
+    liveForecastPartial:
+      "Spá: {n} af sólarlindum þínum hefur engan veitanda, svo hennar hluta ferilsins vantar. Bættu Helios Forecast við hana undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
+    liveForecastMissing:
+      "Spá: enginn veitandi á sólarlindinni, svo ferillinn stöðvast við núið. Settu upp Helios Forecast og tengdu hann undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
     openEnergyConfig: "Opna orkustillingar",
     buildingsSection: "Heimili & byggingar",
     buildingsHint:

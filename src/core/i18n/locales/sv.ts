@@ -187,6 +187,12 @@ export const sv: Translations = {
     liveHomeOk: "Hemförbrukning: visas, härledd från live-familjerna ovan.",
     liveHomeNote:
       "Hemförbrukning visas så snart varje konfigurerad familj ovan har sin live-sensor.",
+    liveForecastOk:
+      "Prognos: varje solkälla har en leverantör kopplad.",
+    liveForecastPartial:
+      "Prognos: {n} av dina solkällor saknar leverantör, så dess del av kurvan fattas. Lägg till Helios Forecast där under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
+    liveForecastMissing:
+      "Prognos: ingen leverantör på din solkälla, så kurvan stannar vid nu. Installera Helios Forecast och koppla det under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
     openEnergyConfig: "Öppna energikonfiguration",
     buildingsSection: "Hem & byggnader",
     buildingsHint:

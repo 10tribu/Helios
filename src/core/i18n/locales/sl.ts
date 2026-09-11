@@ -187,6 +187,12 @@ export const sl: Translations = {
     liveHomeOk: "Poraba doma: prikazana, izpeljana iz zgornjih živih družin.",
     liveHomeNote:
       "Poraba doma se prikaže, ko ima vsaka zgoraj nastavljena družina svoj živi senzor.",
+    liveForecastOk:
+      "Napoved: vsakemu sončnemu viru je dodeljen ponudnik.",
+    liveForecastPartial:
+      "Napoved: {n} vaših sončnih virov nima ponudnika, zato manjka njegov del krivulje. Dodajte mu Helios Forecast v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
+    liveForecastMissing:
+      "Napoved: sončni vir nima ponudnika, zato se krivulja ustavi pri zdaj. Namestite Helios Forecast in ga dodelite v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
     openEnergyConfig: "Odpri nastavitve Energije",
     buildingsSection: "Dom in stavbe",
     buildingsHint:

@@ -188,6 +188,12 @@ export const de: Translations = {
       "Hausverbrauch: wird angezeigt, abgeleitet aus den obigen Live-Familien.",
     liveHomeNote:
       "Hausverbrauch: erscheint, sobald jede oben konfigurierte Familie ihren Live-Sensor hat.",
+    liveForecastOk:
+      "Prognose: jeder Solarquelle ist ein Anbieter zugeordnet.",
+    liveForecastPartial:
+      "Prognose: {n} Ihrer Solarquellen hat keinen Anbieter, ihr Anteil an der Kurve fehlt daher. Fügen Sie dort Helios Forecast hinzu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
+    liveForecastMissing:
+      "Prognose: kein Anbieter an Ihrer Solarquelle, die Kurve endet daher bei jetzt. Installieren Sie Helios Forecast und ordnen Sie es zu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
     openEnergyConfig: "Energie-Konfiguration öffnen",
     buildingsSection: "Zuhause & Gebäude",
     buildingsHint:

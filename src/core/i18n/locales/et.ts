@@ -188,6 +188,12 @@ export const et: Translations = {
       "Kodu tarbimine: kuvatud, tuletatud ülaltoodud otseandmetega perekondadest.",
     liveHomeNote:
       "Kodu tarbimine: ilmub siis, kui igal ülaltoodud seadistatud perekonnal on oma otseandmete andur.",
+    liveForecastOk:
+      "Prognoos: igale päikeseallikale on lisatud pakkuja.",
+    liveForecastPartial:
+      "Prognoos: {n} teie päikeseallikatest on pakkujata, seega puudub tema osa kõverast. Lisage sellele Helios Forecast: Seaded > Töölauad > Energia > Päikesepaneelid.",
+    liveForecastMissing:
+      "Prognoos: päikeseallikal pole pakkujat, seega kõver lõpeb praegusega. Paigaldage Helios Forecast ja lisage see: Seaded > Töölauad > Energia > Päikesepaneelid.",
     openEnergyConfig: "Ava energia seadistus",
     buildingsSection: "Kodu ja hooned",
     buildingsHint:

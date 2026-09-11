@@ -188,6 +188,12 @@ export const pl: Translations = {
       "Zużycie domu: pokazane, wyliczone z powyższych rodzin na żywo.",
     liveHomeNote:
       "Zużycie domu pojawia się, gdy każda skonfigurowana powyżej rodzina ma swój czujnik na żywo.",
+    liveForecastOk:
+      "Prognoza: każde źródło słoneczne ma przypisanego dostawcę.",
+    liveForecastPartial:
+      "Prognoza: {n} z Twoich źródeł słonecznych nie ma dostawcy, więc brakuje jego części krzywej. Dodaj do niego Helios Forecast w Ustawienia > Pulpity > Energia > Panele słoneczne.",
+    liveForecastMissing:
+      "Prognoza: brak dostawcy w źródle słonecznym, więc krzywa kończy się na teraz. Zainstaluj Helios Forecast i przypisz go w Ustawienia > Pulpity > Energia > Panele słoneczne.",
     openEnergyConfig: "Otwórz konfigurację Energii",
     buildingsSection: "Dom i budynki",
     buildingsHint:

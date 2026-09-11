@@ -189,6 +189,12 @@ export const hu: Translations = {
       "Otthoni fogyasztás: megjelenítve, a fenti élő családokból származtatva.",
     liveHomeNote:
       "Az otthoni fogyasztás akkor jelenik meg, ha a fent felsorolt összes beállított család rendelkezik élő érzékelővel.",
+    liveForecastOk:
+      "Előrejelzés: minden napelemes forráshoz tartozik szolgáltató.",
+    liveForecastPartial:
+      "Előrejelzés: {n} napelemes forrásához nincs szolgáltató, így hiányzik a görbe rá eső része. Adja hozzá a Helios Forecastot a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
+    liveForecastMissing:
+      "Előrejelzés: nincs szolgáltató a napelemes forráson, így a görbe a jelennél megáll. Telepítse a Helios Forecastot, és rendelje hozzá a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
     openEnergyConfig: "Energia beállítások megnyitása",
     buildingsSection: "Otthon és épületek",
     buildingsHint:
