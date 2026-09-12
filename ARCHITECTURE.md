@@ -193,6 +193,15 @@ with no re-fetch. The home building(s) extrude opaque; the surroundings extrude 
 the configured opacity. Each footprint also casts a ground shadow from the current
 sun azimuth / altitude.
 
+The home is the nearest footprint, but only within `HOME_MATCH_MAX_M`: the distance
+is zero when an outline contains the home point, so a real match always wins, and a
+house OpenStreetMap does not hold would otherwise leave a neighbour first in the
+distance-sorted list and see it drawn as the home, off-centre against a sun arc and
+a HUD that are centred correctly. Past that distance a generic box stands at the
+centre, flagged `placeholder`, and the real footprints stay neighbours: the street
+still reads true, and the editor reports the substitution rather than leaving a
+plain box to speak for itself.
+
 Three passes turn raw tile rings into a scene that paints correctly:
 
 - **Tile ownership.** Every tile repeats its neighbours' geometry inside a ~37 m
@@ -611,7 +620,19 @@ resolver helper per key in `core/config/helios-config.ts` that clamps + defaults
 the raw value, so a malformed YAML value degrades gracefully instead of throwing.
 The editor (`editor/editor.ts`) is a hand-rolled accordion of native controls +
 Home Assistant entity / icon / colour pickers; it writes the same flat config back
-via `config-changed`.
+via `config-changed`. Its configuration panel reports what the card can actually
+draw: the Energy dashboard wiring per family, the forecast provider per solar
+source, and whether the map held a footprint at the home point, that last one fed
+by the live preview through a `helios-home-building` window event, the same channel
+the camera pose already uses.
+
+Units are a resolver like any other, but with a third mode: `power-unit` and
+`energy-unit` accept `adaptive`, which is a rule rather than a unit. The unit is
+resolved once per render and carried as a value into the formatters, which pick
+watts below a kilowatt and kilowatts above, per value. Everything that prints a
+power or an energy goes through those formatters, so the rule reaches every chip,
+tooltip and panel from one place; chart axes format separately and keep a single
+unit, as an axis must.
 
 Internationalisation (`core/i18n/`) is a strict-typed `Translations` interface
 with one locale file per language, picked by `hass.language` with an English

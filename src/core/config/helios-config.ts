@@ -34,8 +34,10 @@ export {
 //`unknown`; callers validate/coerce, and the DEFAULT_* consts below fill in absent keys.
 export interface HeliosConfig
 {
-    //Index signature so unknown keys read as `unknown` without widening errors; the editor strips any
-    //key not in the named schema below on save.
+    //Index signature so unknown keys read as `unknown` without widening errors. The named keys below are the
+    //schema: every option the card reads is declared here, and docs/CONFIGURATION.md documents the same set.
+    //The editor removes a short list of keys from superseded releases on save (its LEGACY_KEYS); everything
+    //else a dashboard carries is left alone.
     [key: string]: unknown;
     //Storage + render cadence in buckets/hour for the unified data source and every graph. Range 1-6,
     //default 4 (15 min). Higher = finer curves at more CPU/memory. Forecast stays hourly, then interpolated.
@@ -141,6 +143,17 @@ export interface HeliosConfig
     'energy-unit'?:            unknown;
     //Irradiance (solar constant) readout unit: 'W/m²', 'kW/m²' or 'W/ft²'. Default 'W/m²'.
     'irradiance-unit'?:        unknown;
+    //Decimal places on every value readout, clamped [0,3]. See valueDecimals().
+    'value-decimals'?:         unknown;
+    //Peak power (W) the flow animations normalise their speed against. See maxExpectedPower().
+    'max-expected-power'?:     unknown;
+    //Cost readout on the chips and in the detail panel. Default shown.
+    'show-cost'?:              unknown;
+    //Compatibility rendering: simpler compositing for devices whose browser flickers under the normal path.
+    'degraded-render'?:        unknown;
+    //Basemap polarity: 'auto' (follow the Home Assistant theme), 'dark', 'light', or 'custom' to use the
+    //per-layer map-color-<layer> / map-show-<layer> keys.
+    'map-theme-mode'?:         unknown;
     //Battery chip sign convention: 'default' (- charging, + discharging), 'inverted' (+ charging,
     //- discharging), or 'hidden' (magnitude only). Display-only; flow direction and history are unchanged.
     'battery-sign'?:           unknown;
@@ -541,7 +554,7 @@ export type MapThemeMode = 'auto' | 'dark' | 'light' | 'custom';
 //the per-layer colours + visibility below.
 export function mapThemeMode(config: HeliosConfig | undefined): MapThemeMode
 {
-    const v = (config as Record<string, unknown> | undefined)?.['map-theme-mode'];
+    const v = config?.['map-theme-mode'];
     return v === 'dark' || v === 'light' || v === 'custom' ? v : 'auto';
 }
 
