@@ -108,11 +108,12 @@ export const es: Translations = {
       "Número de decimales mostrados en cada lectura de valor, para que los chips se lean uniformes. Se aplica a los valores en kW (los vatios enteros siguen siendo enteros) y a los kWh. De 0 a 3, por defecto 1.",
     powerUnit: "Unidad de potencia",
     powerUnitHelp:
-      "Unidad para cada lectura de potencia en la tarjeta (chips, información sobre herramientas del gráfico). La energía también la sigue, así que la tarjeta se mantiene coherente: kW se combina con kWh, y W con Wh.",
+      "Unidad para cada lectura de potencia en la tarjeta (chips, información sobre herramientas del gráfico). La energía también la sigue, así que la tarjeta se mantiene coherente: kW se combina con kWh, y W con Wh. Adaptativa elige la unidad valor por valor: vatios por debajo de un kilovatio, kilovatios por encima.",
     energyUnit: "Unidad de energía",
     energyUnitHelp:
       "Unidad para cada total de energía (la curva del día, el panel de detalle, los totales diarios de la línea de tiempo). Automático sigue la unidad de potencia de arriba; elige Wh o kWh para configurarla por separado.",
     energyUnitAuto: "Automático",
+    unitAdaptive: "Adaptativa",
     irradianceUnit: "Unidad de constante solar",
     irradianceUnitHelp:
       "Unidad para la lectura de la constante solar (irradiancia) sobre el sol.",
@@ -189,6 +190,16 @@ export const es: Translations = {
       "Consumo del hogar: mostrado, derivado de las familias en directo anteriores.",
     liveHomeNote:
       "Consumo del hogar: aparece cuando cada familia configurada arriba tiene su sensor en directo.",
+    liveForecastOk:
+      "Previsión: cada fuente solar tiene un proveedor asignado.",
+    liveForecastPartial:
+      "Previsión: falta un proveedor en {n} de sus fuentes solares, así que la curva anuncia menos de lo que producirá. Añada ahí Helios Forecast en Ajustes > Paneles > Energía > Paneles solares.",
+    liveForecastMissing:
+      "Previsión: ninguna fuente solar tiene proveedor, así que la curva se detiene en el presente. Instale Helios Forecast y asígnelo en Ajustes > Paneles > Energía > Paneles solares.",
+    liveHouseOk:
+      "Casa: su contorno está en el mapa y la escena está centrada en él.",
+    liveHouseMissing:
+      "Casa: no hay ningún edificio en el mapa en sus coordenadas, así que una casa genérica ocupa su lugar. Añada su casa a OpenStreetMap, o corrija el punto en la sección Ubicación de la casa.",
     openEnergyConfig: "Abrir configuración de Energía",
     buildingsSection: "Casa y edificios",
     buildingsHint:

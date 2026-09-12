@@ -7,6 +7,87 @@ and the project follows a date-based versioning scheme (`YEAR.MONTH.PATCH`).
 
 ---
 
+## 2026.9.5
+
+### Fixed: a scrubbed scene whose chips did not add up
+
+Rewinding the timeline, a readout took the single recorder bucket holding the instant when its meter
+looked fine-grained, and averaged a window otherwise. A counter that advances in coarse steps passes
+for fine-grained and is neither: a Linky index ticking every 0.1 kWh lands a whole step in one bucket
+and nothing in the next, so under a steady 1.2 kW its own bucket reads zero. The home chip then
+showed the inverter's standby while two device groups drew a hundred and sixty watts, which is
+arithmetically impossible, and each number was right by its own rule. Every scrubbed value is now the
+average over the same window. Measured against the live power sensors of one house, the error on the
+quantised meter falls by a fifth and its false zeros go, for a few watts on the meters that were
+already read correctly.
+
+### Added: an adaptive power and energy unit
+
+The unit was a single global choice, and a house is not global. A heat pump sits in kilowatts, a
+dryer swings between two kilowatts while it heats and eighty watts while it holds temperature, and
+neither setting served both: in `kW` those eighty watts printed as "0 kW", and in `W` the heat pump
+printed five digits everywhere. `power-unit` and `energy-unit` gain a third choice, `adaptive`, which
+is a rule rather than a unit: each value is printed in watts below a kilowatt and in kilowatts above,
+energy likewise at a kilowatt-hour. Nothing to configure, and an `adaptive` power unit carries into
+an `auto` energy unit, so the rule is chosen once.
+
+### Fixed: a neighbour's house drawn as the home when the map has none
+
+The nearest footprint was marked as home with no distance test. A house OpenStreetMap does not hold
+left the nearest neighbour first in the distance-sorted list, and it was drawn as the home at full
+opacity, off-centre against a sun arc and a HUD that were centred correctly. Past twenty-five metres
+the home is now a generic house at the centre and the real footprints stay neighbours, so the street
+still reads true and only the building the map is missing is the one standing in. The editor's
+configuration panel gains a line saying so, rather than leaving a plain box to speak for itself.
+
+### Changed: the editor says whether a forecast is actually attached
+
+The configuration panel at the top of the editor checked the live power sensor of every family and
+nothing else, so it could show four green ticks to someone whose card drew no forecast at all: the
+curve ahead of "now" comes from the provider attached to each solar source in the Energy dashboard,
+and installing Helios-Forecast does not attach it. The panel now has a fifth line for it, and it
+counts per source rather than overall, because a dashboard with two arrays and a provider on one of
+them draws half a curve, which reads as a bad forecast rather than a missing one.
+
+### Fixed: the grid chips come back on a dashboard wired the new way
+
+Home Assistant has written the live-power sensor of an Energy source three ways over time: at the
+top of the source as `stat_rate`, at the top as `power_config`, and, since the dashboard's power
+rework, inside a `power[]` array whose entries carry their own. Helios read the first two. A
+dashboard written entirely in the newest shape therefore carries nothing where the card looked, and
+the card reported "no live power sensor" for a grid whose sensor Home Assistant's own tile was
+showing at that moment, hiding the import and export chips (reported in #440). All three shapes are
+read now, for grid, battery and solar alike, and an entity repeated at both levels of one entry is
+counted once rather than summed into the live figure twice.
+
+### Changed: the basemap is painted in levels of detail
+
+The ground under your home was one canvas, 2816 pixels square, about 30 MB of
+memory whatever the size of the card or the display radius you chose, and on an
+iPhone that single allocation, held twice over by the compositor, was enough to
+push the Home Assistant app past the memory the system allows a page before it
+reloads it (reported in #414). The ground is now three concentric canvases
+painted from the same vector features: the finest covers a hundred metres at
+full resolution, the next reaches 210 m at half, the outermost 300 m at a
+quarter, and each finer level dissolves into the one beneath through its own
+alpha, so where two overlap the eye blends the same roads and parcels at two
+sharpnesses rather than seeing a seam. The perspective compresses the far field
+harder than the coarser levels lose, so the scene looks as it did while the
+ground allocates about a third of what it did. Its reach is now metric as well,
+300 m at every latitude: the old tile square shrank toward the poles and near
+Oslo fell short of the 250 m display radius the card allows.
+
+### Fixed: an array with its own coordinates no longer stands inside the house
+
+A Helios-Forecast line that carries its own latitude and longitude was drawn at
+ground level wherever it fell, so panels entered on the house appeared inside its
+prism (reported in #432). The tile now stands on the roof of the building whose
+footprint holds its point, at the height that building is drawn, and on the ground
+only when no building does: roof arrays climb onto the house or the garage, ground
+arrays in a field stay put, and nobody has to declare a mounting height.
+
+---
+
 ## 2026.9.4
 
 The performance release. A full audit of the rendering pipeline, every fix

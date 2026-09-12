@@ -8,7 +8,7 @@
 //kWh-per-bucket / bucket-duration = average watts, so where HA has a number the card shows the same number.
 
 import type { HassLike } from '../../core/ha-types';
-import { CHANGE_REFRESH_MS, COARSE_PROBE_MS, DENSE_FRACTION, COARSE_MAX_SPREAD_BUCKETS, HOUR_MS, DAY_MS } from '../../core/config/constants';
+import { CHANGE_REFRESH_MS, COARSE_PROBE_MS, COARSE_MAX_SPREAD_BUCKETS, HOUR_MS, DAY_MS } from '../../core/config/constants';
 import { callWS } from '../ha-gateway';
 import { RequestCache } from '../request-cache';
 import { loadDurable, saveDurable, loadDurableSeries, saveDurableSeries } from '../durable-cache';
@@ -327,21 +327,13 @@ export function changeSeriesToWatts(
 }
 
 
-//Scrub-time reads must cope with two meter types:
-//  - Fine: counter advances every few seconds, so every bucket carries energy and the bucket containing the
-//    instant is the correct read.
-//  - Coarse (reports every 15 min): counter only advances on report, so the recorder lands the whole delta in one
-//    bucket and zeroes the ones between; the probe window average spreads it back over its real interval.
-//Distinguished by density of non-zero buckets in the probe window.
-
-//Average power (W) over buckets overlapping [loMs, hiMs), pro-rating straddlers. Returns kwh/ms/nonZero/total so the
-//caller can both average AND judge meter density.
-function probeChangeWindow(buckets: ChangeBucket[], loMs: number, hiMs: number): { kwh: number; ms: number; nonZero: number; total: number }
+//Energy and covered time over the buckets overlapping [loMs, hiMs), pro-rating the ones that straddle an edge.
+//`total` counts the buckets reached, so a caller can tell an empty window from a window of zeroes.
+function probeChangeWindow(buckets: ChangeBucket[], loMs: number, hiMs: number): { kwh: number; ms: number; total: number }
 {
-    let kwh = 0;
-    let ms  = 0;
-    let nonZero = 0;
-    let total   = 0;
+    let kwh   = 0;
+    let ms    = 0;
+    let total = 0;
     for (const b of buckets)
     {
         if (b.endMs <= loMs || b.startMs >= hiMs)
@@ -361,23 +353,17 @@ function probeChangeWindow(buckets: ChangeBucket[], loMs: number, hiMs: number):
         kwh += b.kwh * (ov / span);
         ms  += ov;
         total++;
-        if (b.kwh > 0)
-        {
-            nonZero++;
-        }
     }
-    return { kwh, ms, nonZero, total };
-}
-
-function wattsFromBucket(b: ChangeBucket): number
-{
-    const dt = b.endMs - b.startMs;
-    return dt > 0 ? Math.max(0, (b.kwh * 1000) / (dt / HOUR_MS)) : 0;
+    return { kwh, ms, total };
 }
 
 
-//Average watts at an arbitrary past instant, for the scrub tooltip. Same fine/coarse split centred on tMs. Null only
-//when no bucket covers the probe window (future scrub, gap before data starts).
+//Average watts at an arbitrary past instant, for every scrubbed readout. The value is the average over a window
+//centred on tMs, never the single bucket holding it: a counter that advances in coarse steps (a Linky index
+//ticking every 0.1 kWh) lands a whole step in one bucket and nothing in the next, so its own bucket reads zero
+//while the house is drawing a kilowatt. The window also puts every readout of one frame on the same span, which
+//is what lets the chips of a scrubbed scene add up. Null only when no bucket covers the window (future scrub,
+//gap before the data starts); a window of genuine zeroes reads 0 W.
 export function wattsAtFromChangeSeries(
     buckets: ChangeBucket[] | null,
     tMs:     number,
@@ -393,19 +379,6 @@ export function wattsAtFromChangeSeries(
     {
         return null;
     }
-    const dense = probe.nonZero >= Math.ceil(probe.total * DENSE_FRACTION);
-    if (dense)
-    {
-        //Fine meter: read the bucket that actually contains tMs.
-        for (const b of buckets)
-        {
-            if (tMs >= b.startMs && tMs < b.endMs)
-            {
-                return wattsFromBucket(b);
-            }
-        }
-    }
-    //Coarse meter (or tMs between buckets): average the probe window.
     return probe.ms > 0 ? Math.max(0, (probe.kwh * 1000) / (probe.ms / HOUR_MS)) : 0;
 }
 

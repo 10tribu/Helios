@@ -108,11 +108,12 @@ export const sv: Translations = {
       "Antal decimaler som visas på varje värdeutläsning, så att chipsen ser enhetliga ut. Gäller kW-värden (hela watt förblir heltal) och kWh. 0 till 3, standard 1.",
     powerUnit: "Effektenhet",
     powerUnitHelp:
-      "Enhet för varje effektutläsning på kortet (chips, grafverktygstips). Energin följer den också, så kortet förblir konsekvent: kW hör ihop med kWh, W med Wh.",
+      "Enhet för varje effektutläsning på kortet (chips, grafverktygstips). Energin följer den också, så kortet förblir konsekvent: kW hör ihop med kWh, W med Wh. Adaptiv väljer enhet per värde: watt under en kilowatt, kilowatt över.",
     energyUnit: "Energienhet",
     energyUnitHelp:
       "Enhet för alla energitotaler (dagskurvan, detaljpanelen, tidslinjens dagstotaler). Auto följer effektenheten ovan; välj Wh eller kWh för att ställa in den separat.",
     energyUnitAuto: "Auto",
+    unitAdaptive: "Adaptiv",
     irradianceUnit: "Enhet för solkonstant",
     irradianceUnitHelp:
       "Enhet för utläsningen av solkonstanten (irradians) ovanför solen.",
@@ -187,6 +188,16 @@ export const sv: Translations = {
     liveHomeOk: "Hemförbrukning: visas, härledd från live-familjerna ovan.",
     liveHomeNote:
       "Hemförbrukning visas så snart varje konfigurerad familj ovan har sin live-sensor.",
+    liveForecastOk:
+      "Prognos: varje solkälla har en leverantör kopplad.",
+    liveForecastPartial:
+      "Prognos: en leverantör saknas på {n} av dina solkällor, så kurvan utlovar mindre än du kommer att producera. Lägg till Helios Forecast där under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
+    liveForecastMissing:
+      "Prognos: ingen leverantör på din solkälla, så kurvan stannar vid nu. Installera Helios Forecast och koppla det under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
+    liveHouseOk:
+      "Hus: dess kontur finns på kartan och scenen är centrerad på den.",
+    liveHouseMissing:
+      "Hus: ingen byggnad på kartan vid dina koordinater, så ett generiskt hus står i stället. Lägg till ditt hus i OpenStreetMap, eller korrigera punkten i avsnittet Husets plats.",
     openEnergyConfig: "Öppna energikonfiguration",
     buildingsSection: "Hem & byggnader",
     buildingsHint:

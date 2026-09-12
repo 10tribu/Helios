@@ -108,11 +108,12 @@ export const isLocale: Translations = {
       "Fjöldi aukastafa sem birtir eru á hverjum gildislestri, svo flögurnar lesist samræmt. Á við um kW-gildi (heil vött haldast heiltölur) og kWh. 0 til 3, sjálfgefið 1.",
     powerUnit: "Afleining",
     powerUnitHelp:
-      "Eining fyrir hverja aflmælingu á kortinu (flögur, ábendingar á grafi). Orkan fylgir henni líka, svo kortið haldist samræmt: kW parast við kWh, W við Wh.",
+      "Eining fyrir hverja aflmælingu á kortinu (flögur, ábendingar á grafi). Orkan fylgir henni líka, svo kortið haldist samræmt: kW parast við kWh, W við Wh. Aðlagandi velur einingu fyrir hvert gildi: vött undir kílóvatti, kílóvött yfir.",
     energyUnit: "Orkueining",
     energyUnitHelp:
       "Eining fyrir allar orkusamtölur (dagferilinn, nánari upplýsingar spjaldið, dagsamtölur tímalínunnar). Sjálfvirkt fylgir aflseiningunni hér að ofan; veldu Wh eða kWh til að stilla hana sérstaklega.",
     energyUnitAuto: "Sjálfvirkt",
+    unitAdaptive: "Aðlagandi",
     irradianceUnit: "Eining sólfastans",
     irradianceUnitHelp:
       "Eining fyrir mælingu sólfastans (sólgeislunar) fyrir ofan sólina.",
@@ -188,6 +189,16 @@ export const isLocale: Translations = {
       "Heimilisnotkun: sýnd, reiknuð út frá lifandi fjölskyldunum hér fyrir ofan.",
     liveHomeNote:
       "Heimilisnotkun: birtist um leið og hver stillt fjölskylda hér fyrir ofan hefur sinn lifandi skynjara.",
+    liveForecastOk:
+      "Spá: hverri sólarlind er tengdur veitandi.",
+    liveForecastPartial:
+      "Spá: veitanda vantar á {n} af sólarlindum þínum, svo ferillinn boðar minna en þú munt framleiða. Bættu Helios Forecast við þar undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
+    liveForecastMissing:
+      "Spá: enginn veitandi á sólarlindinni, svo ferillinn stöðvast við núið. Settu upp Helios Forecast og tengdu hann undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
+    liveHouseOk:
+      "Hús: útlína þess er á kortinu og senan er miðjuð á hana.",
+    liveHouseMissing:
+      "Hús: engin bygging á kortinu við hnitin þín, því stendur almennt hús í staðinn. Bættu húsinu þínu við OpenStreetMap eða leiðréttu punktinn í hlutanum Staðsetning hússins.",
     openEnergyConfig: "Opna orkustillingar",
     buildingsSection: "Heimili & byggingar",
     buildingsHint:

@@ -134,6 +134,28 @@ size while the neighbourhood zooms in under them. Default 1 applies no
 magnification: the transform string and every projection are those of the unzoomed
 scene.
 
+### Basemap levels of detail, `scene/ground-render.ts`
+
+The ground is not one canvas but three concentric ones (`GROUND_LOD_LEVELS`),
+each a full square centred on the home and painted from the same vector
+features: the finest reaches 100 m at one canvas px per base px, the next 210 m
+at one per two, the outermost 300 m at one per four. Every level paints in the
+same base-px space through a scaled context, so widths, dashes and geometry land
+where the finest level puts them and one `Path2D` cache serves all three; the
+renderer then hands each canvas the shared `groundTransform` with its own
+`scale()` innermost, magnifying it back into place. A level that has one beneath
+carries an alpha ramp baked into its own pixels (`destination-in` on a radial
+gradient, opaque to `fadeFromM`, gone at its edge), so where two levels overlap
+the screen blends the same tracés at two sharpnesses and there is no seam to see,
+without any compositing mask. The perspective compresses the far field harder
+than the ladder coarsens it, so at any tilt above about 40° the loss at the
+horizon stays under a screen pixel. The whole ladder allocates about 9 MB at mid
+latitudes against the 30 MB of the single 11-tile canvas it replaces, and its
+reach is metric: 300 m at every latitude, where the tile square fell to 210 m
+near Oslo, short of the 250 m display radius the card allows. The compat
+`projected` path, which repaints one card-sized canvas per camera move, builds
+the single flat level (`GROUND_LOD_FLAT`).
+
 ### Scene SVG, `scene/renderer.ts`
 
 `SceneRenderer` owns the DOM inside the card's map container: the ground canvas
@@ -170,6 +192,15 @@ height, home-cluster radius) is a pure pass re-run in memory on any option chang
 with no re-fetch. The home building(s) extrude opaque; the surroundings extrude at
 the configured opacity. Each footprint also casts a ground shadow from the current
 sun azimuth / altitude.
+
+The home is the nearest footprint, but only within `HOME_MATCH_MAX_M`: the distance
+is zero when an outline contains the home point, so a real match always wins, and a
+house OpenStreetMap does not hold would otherwise leave a neighbour first in the
+distance-sorted list and see it drawn as the home, off-centre against a sun arc and
+a HUD that are centred correctly. Past that distance a generic box stands at the
+centre, flagged `placeholder`, and the real footprints stay neighbours: the street
+still reads true, and the editor reports the substitution rather than leaving a
+plain box to speak for itself.
 
 Three passes turn raw tile rings into a scene that paints correctly:
 
@@ -354,12 +385,25 @@ in this section.
 Helios does not take per-card entity keys. It subscribes to `energy/get_prefs`
 and resolves the solar / grid / battery / forecast slots from the user's Energy
 dashboard config, the same slots the official Energy card reads, re-fetching on
-`energy_preferences_updated`. **Measured values only**: live chips read the
+`energy_preferences_updated`. A source's live-power slot is read in every shape
+the core has written it: `stat_rate` and `power_config` at the top of the source,
+and the `power[]` array of the dashboard's power rework, whose entries carry their
+own (`collectRateSlots`). A config written only in the newest shape would otherwise
+read as a source with no live sensor. **Measured values only**: live chips read the
 configured live power sensors directly (`sumLiveWatts` in `data/source-fetch.ts`,
 SI-normalised, summed across every wired source); a value is never derived from a
 cumulative energy meter. The past curves read the recorder's pre-computed `change`
 metric, the exact numbers the Energy dashboard shows, so the two surfaces agree to
-the watt-hour. `data/sources/pv.ts`, `battery.ts`, `grid.ts`, `irradiance.ts` own
+the watt-hour.
+
+A scrubbed READOUT (a chip, a tooltip) is the average over a fixed window centred on
+the instant asked for (`wattsAtFromChangeSeries`), never the single bucket holding it.
+A counter that advances in coarse steps, a Linky index ticking every 0.1 kWh, lands a
+whole step in one bucket and nothing in the next, so its own bucket reads zero under a
+steady kilowatt. Averaging also puts every readout of one frame on the same span,
+which is what lets a scrubbed scene's chips add up: a house cannot draw less than the
+devices inside it, and two meters read over two different windows can say exactly
+that. `data/sources/pv.ts`, `battery.ts`, `grid.ts`, `irradiance.ts` own
 the live + history resolution per source; `data/energy-forecast.ts` reads the
 dashboard's configured solar-forecast provider, preferring the
 [Helios-Forecast](https://github.com/ReikanYsora/Helios-Forecast) integration's own
@@ -585,7 +629,19 @@ resolver helper per key in `core/config/helios-config.ts` that clamps + defaults
 the raw value, so a malformed YAML value degrades gracefully instead of throwing.
 The editor (`editor/editor.ts`) is a hand-rolled accordion of native controls +
 Home Assistant entity / icon / colour pickers; it writes the same flat config back
-via `config-changed`.
+via `config-changed`. Its configuration panel reports what the card can actually
+draw: the Energy dashboard wiring per family, the forecast provider per solar
+source, and whether the map held a footprint at the home point, that last one fed
+by the live preview through a `helios-home-building` window event, the same channel
+the camera pose already uses.
+
+Units are a resolver like any other, but with a third mode: `power-unit` and
+`energy-unit` accept `adaptive`, which is a rule rather than a unit. The unit is
+resolved once per render and carried as a value into the formatters, which pick
+watts below a kilowatt and kilowatts above, per value. Everything that prints a
+power or an energy goes through those formatters, so the rule reaches every chip,
+tooltip and panel from one place; chart axes format separately and keep a single
+unit, as an axis must.
 
 Internationalisation (`core/i18n/`) is a strict-typed `Translations` interface
 with one locale file per language, picked by `hass.language` with an English
@@ -622,6 +678,5 @@ fallback.
    the card that comes next boots from that parked ground and warm data: its
    first frames already carry the map, the buildings, the chips and the chart,
    while its own fetches run behind. The pool keeps one spare ground for a
-   minute and empties the canvas of anything it lets go (2816 px square, some
-   32 MB each), so a burst of rebuilds never stacks basemaps waiting for the
-   garbage collector.
+   minute and empties the canvases of anything it lets go, so a burst of
+   rebuilds never stacks basemaps waiting for the garbage collector.

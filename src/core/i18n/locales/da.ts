@@ -108,11 +108,12 @@ export const da: Translations = {
       "Antal decimaler vist på hver værdiaflæsning, så chipsene fremstår ensartede. Gælder kW-værdier (hele watt forbliver heltal) og kWh. 0 til 3, standard 1.",
     powerUnit: "Effektenhed",
     powerUnitHelp:
-      "Enhed for hver effektaflæsning på kortet (chips, grafværktøjstips). Energi følger den også, så kortet forbliver konsistent: kW parres med kWh, W med Wh.",
+      "Enhed for hver effektaflæsning på kortet (chips, grafværktøjstips). Energi følger den også, så kortet forbliver konsistent: kW parres med kWh, W med Wh. Adaptiv vælger enhed pr. værdi: watt under en kilowatt, kilowatt derover.",
     energyUnit: "Energienhed",
     energyUnitHelp:
       "Enhed for alle energitotaler (dagskurven, detaljepanelet, dagstotalerne på tidslinjen). Auto følger effektenheden ovenfor; vælg Wh eller kWh for at indstille den selvstændigt.",
     energyUnitAuto: "Auto",
+    unitAdaptive: "Adaptiv",
     irradianceUnit: "Enhed for solkonstant",
     irradianceUnitHelp:
       "Enhed for aflæsningen af solkonstanten (irradians) over solen.",
@@ -187,6 +188,16 @@ export const da: Translations = {
     liveHomeOk: "Hjemmets forbrug: vises, udledt af live-familierne ovenfor.",
     liveHomeNote:
       "Hjemmets forbrug vises, når hver konfigureret familie ovenfor har sin live-sensor.",
+    liveForecastOk:
+      "Prognose: hver solkilde har en udbyder tilknyttet.",
+    liveForecastPartial:
+      "Prognose: der mangler en udbyder på {n} af dine solkilder, så kurven lover mindre, end du vil producere. Tilføj Helios Forecast der under Indstillinger > Betjeningspaneler > Energi > Solpaneler.",
+    liveForecastMissing:
+      "Prognose: ingen udbyder på din solkilde, så kurven stopper ved nu. Installer Helios Forecast og tilknyt den under Indstillinger > Betjeningspaneler > Energi > Solpaneler.",
+    liveHouseOk:
+      "Hus: dets omrids ligger på kortet, og scenen er centreret om det.",
+    liveHouseMissing:
+      "Hus: ingen bygning på kortet ved dine koordinater, så et generisk hus står i stedet. Tilføj dit hus til OpenStreetMap, eller ret punktet i afsnittet Husets placering.",
     openEnergyConfig: "Åbn energikonfiguration",
     buildingsSection: "Hjem & bygninger",
     buildingsHint:

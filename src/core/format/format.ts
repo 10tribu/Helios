@@ -148,7 +148,22 @@ export function formatHaDateTime(hass: HassLike, date: Date): string
 
 
 //Power display unit for the whole card, resolved from config (see powerUnit()). Energy readouts stay kWh.
-export type PowerUnit = 'W' | 'kW';
+export type PowerUnit = 'W' | 'kW' | 'adaptive';
+
+//Where the adaptive unit changes over: a kilowatt, the boundary every appliance display already uses. Below it a
+//reading prints in watts, above it in kilowatts, so a dryer alternating between 2 kW and 80 W stops showing its
+//idle phase as "0 kW" without forcing the whole card into watts for the heat pump's sake.
+const ADAPTIVE_SWITCH_W = 1000;
+
+//The unit a value is actually printed in. Only 'adaptive' depends on the value; the two fixed units pass through.
+function resolvedPowerUnit(unit: PowerUnit, watts: number): 'W' | 'kW'
+{
+    if (unit !== 'adaptive')
+    {
+        return unit;
+    }
+    return Math.abs(watts) < ADAPTIVE_SWITCH_W ? 'W' : 'kW';
+}
 
 //Uniform power readout in the card's configured unit, locale-aware. Input is watts. 'kW' divides by 1000 at the
 //caller's decimal count; 'W' prints whole watts (a fractional watt is meaningless). `signed` prefixes an explicit
@@ -156,11 +171,12 @@ export type PowerUnit = 'W' | 'kW';
 export function formatPower(hass: HassLike, watts: number, decimals: number, unit: PowerUnit, signed = false): string
 {
     const mag = signed ? Math.abs(watts) : watts;
+    const resolved = resolvedPowerUnit(unit, watts);
     //Sign from the ROUNDED display magnitude: a value that snaps to 0 at the shown precision prints no sign, so a
     //tiny negative reading reads "0 kW", never "-0.0 kW".
-    const displayMag = unit === 'W' ? Math.round(mag) : Number((mag / 1000).toFixed(decimals));
+    const displayMag = resolved === 'W' ? Math.round(mag) : Number((mag / 1000).toFixed(decimals));
     const sign = signed && displayMag !== 0 ? (watts < 0 ? '-' : '+') : '';
-    if (unit === 'W')
+    if (resolved === 'W')
     {
         return `${sign}${formatLocalisedNumber(hass, Math.round(mag), 0)} W`;
     }
@@ -242,13 +258,14 @@ export function formatTemperature(hass: HassLike, celsius: number, decimals = 1)
 
 //Energy total display unit for the whole card, resolved from config (see energyUnit()). Independent of PowerUnit:
 //defaults to following it (kW -> kWh, W -> Wh) but can be set on its own.
-export type EnergyUnit = 'Wh' | 'kWh';
+export type EnergyUnit = 'Wh' | 'kWh' | 'adaptive';
 
 //Uniform energy readout, locale-aware. Input is kWh. 'kWh' keeps it at the caller's decimals; 'Wh' prints whole
-//watt-hours.
+//watt-hours; 'adaptive' picks per value at the same one-kilowatt-hour boundary the power readout uses.
 export function formatEnergyKwh(hass: HassLike, kwh: number, decimals: number, unit: EnergyUnit = 'kWh'): string
 {
-    if (unit === 'Wh')
+    const resolved = unit === 'adaptive' ? (Math.abs(kwh) < 1 ? 'Wh' : 'kWh') : unit;
+    if (resolved === 'Wh')
     {
         return `${formatLocalisedNumber(hass, Math.round(kwh * 1000), 0)} Wh`;
     }
@@ -334,7 +351,8 @@ export function formatEntityValue(hass: HassLike, value: number, unit: string, d
     {
         //A live entity chip stays tied to the power unit, never the separate energy-total setting: a chip is
         //always read as "now", and "now" is power, whichever family the source entity happens to report in.
-        return formatEnergyKwh(hass, energyToKwh(value, unit), decimals, powerU === 'W' ? 'Wh' : 'kWh');
+        const asEnergy: EnergyUnit = powerU === 'adaptive' ? 'adaptive' : (powerU === 'W' ? 'Wh' : 'kWh');
+        return formatEnergyKwh(hass, energyToKwh(value, unit), decimals, asEnergy);
     }
     const formatted = formatLocalisedNumber(hass, value, decimals);
     return u ? `${formatted} ${u}` : formatted;

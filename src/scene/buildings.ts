@@ -20,7 +20,7 @@ import type { SceneCamera, ProjectedPoint } from './projection';
 import { PERSPECTIVE, NEAR_PLANE } from './projection';
 import { tintedRgba, buildingColor } from '../core/render-kit/colors';
 import { mixHex, hexByte, rgbaHex } from '../core/render-kit/hex';
-import { pointsAttr, clipPolygon, cardClipRect, type Point, type ClipRect } from '../core/render-kit/geometry';
+import { pointsAttr, clipPolygon, cardClipRect, pointInPolygon, type Point, type ClipRect } from '../core/render-kit/geometry';
 import { fetchOfmBuildingRings, type OfmRing } from './openfreemap';
 import { DEG, SHADOW_FADE_DEG, MAX_SHADOW_M,
     FIXED_BUILDING_HEIGHT_M,
@@ -28,6 +28,7 @@ import { DEG, SHADOW_FADE_DEG, MAX_SHADOW_M,
     MAX_DISPLAY_RADIUS_M,
     FALLBACK_HOUSE_HALF_W,
     FALLBACK_HOUSE_HALF_D,
+    HOME_MATCH_MAX_M,
     BUILDING_CACHE_TTL_MS,
     REAL_HEIGHT_CAP_M,
     REAL_HEIGHT_FALLBACK_M,
@@ -49,6 +50,9 @@ export interface Building
     //Outlines of the ORIGINAL buildings this volume merged, drawn flat on the roof so a terrace still reads as
     //separate houses. They live on the roof plane, so they carry no depth conflict of their own.
     detail?:   Point[][];
+    //Set on the generic box stood in when the map has no footprint at the home point. The scene draws it like
+    //any other building; the editor says so, because a plain box is a weaker signal than a wrong house.
+    placeholder?: boolean;
 }
 
 //Subset renderShadows reads from a caster: footprint, height, and centroid (for the near-plane cull).
@@ -93,22 +97,6 @@ export interface RawBuilding
     centerY:    number;         //centroid north
     distanceM:  number;         //distance from the home to the footprint (0 if it contains the home)
     osmHeightM: number | null;  //raw uncapped OSM render height (m), null when untagged
-}
-
-//Ray-casting point-in-polygon (local metres).
-function pointInPolygon(x: number, y: number, polygon: Point[]): boolean
-{
-    let inside = false;
-    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++)
-    {
-        const [ax, ay] = polygon[i];
-        const [bx, by] = polygon[j];
-        if ((ay > y) !== (by > y) && x < (bx - ax) * (y - ay) / (by - ay) + ax)
-        {
-            inside = !inside;
-        }
-    }
-    return inside;
 }
 
 //Shoelace signed area: positive for a counter-clockwise ring. Shared by every winding-normalisation pass below,
@@ -287,10 +275,11 @@ function fallbackHouse(): Building
             [w, d],
             [-w, d],
         ],
-        height:  FIXED_BUILDING_HEIGHT_M,
-        isHome:  true,
-        centerX: 0,
-        centerY: 0,
+        height:      FIXED_BUILDING_HEIGHT_M,
+        isHome:      true,
+        centerX:     0,
+        centerY:     0,
+        placeholder: true,
     };
 }
 
@@ -441,8 +430,9 @@ function mergeSameHeight(list: Building[]): Building[]
                 holes:     rings.slice(1),
                 //Only the originals that landed in THIS block: a group can merge into several blocks.
                 detail:    group.filter((b) => pointInPolygon(b.centerX, b.centerY, outer)).map((b) => b.footprint),
-                height:    group[0].height,
-                isHome:    group[0].isHome,
+                height:      group[0].height,
+                isHome:      group[0].isHome,
+                placeholder: group[0].placeholder,
                 centerX,
                 centerY,
             });
@@ -488,6 +478,17 @@ export function interpretBuildings(
         centerX:   b.centerX,
         centerY:   b.centerY,
     }));
+
+    //The nearest footprint is the home only if it is near enough to BE the home. distanceM is 0 when the
+    //outline contains the home point, so any real match scores 0; a house the map does not have leaves the
+    //nearest neighbour first in the list, and marking it home used to draw somebody else's roof under the sun
+    //arc, off-centre against a HUD that is centred correctly. Past the threshold the home becomes the generic
+    //box at the centre and the real footprints stay as what they are, neighbours: the street still reads
+    //true, and only the house the map is missing says so.
+    if (kept[0].distanceM > HOME_MATCH_MAX_M)
+    {
+        return mergeSameHeight([fallbackHouse(), ...buildings]);
+    }
 
     //Mark the home: the smallest-distanceM building (first after the sort), then every other kept building
     //whose centroid is within clusterRadiusM of it (attached outbuildings join the home set). 0 = home only.

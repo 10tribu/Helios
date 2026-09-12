@@ -413,6 +413,8 @@ function wireEngineCallbacks(host: InitHost): void
     //true so the flip below lands on "run" first: a real (non-burst) transform is a single isolated call, and
     //this way it's never the one that gets skipped.
     let overlaySkip = true;
+    //Last answer sent to the editor about the home footprint, so the event fires on a change and not per frame.
+    let lastHomeMissing: boolean | null = null;
     host._engine.onMapTransform = () =>
     {
         //If paused (off-screen or hidden tab) the renderer can still paint (a late ground build completing), but nothing is
@@ -442,6 +444,16 @@ function wireEngineCallbacks(host: InitHost): void
                 {
                     (host as unknown as HTMLElement).dispatchEvent(
                         new CustomEvent('helios-camera-pose', { detail: pose, bubbles: true, composed: true }));
+                }
+                //And whether the map actually had a house at the home point. Sent only when the answer changes,
+                //because this rides a frame callback and the editor only needs to know on the way in and out.
+                const missing = host._engine?.homeIsPlaceholder() ?? null;
+                if (missing !== null && missing !== lastHomeMissing)
+                {
+                    lastHomeMissing = missing;
+                    (host as unknown as HTMLElement).dispatchEvent(
+                        new CustomEvent('helios-home-building',
+                            { detail: { missing }, bubbles: true, composed: true }));
                 }
             }
         });
