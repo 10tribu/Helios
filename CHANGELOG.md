@@ -7,6 +7,24 @@ and the project follows a date-based versioning scheme (`YEAR.MONTH.PATCH`).
 
 ---
 
+## 2026.9.6
+
+### Fixed: a live power counted twice
+
+2026.9.5 taught the card to read the live power sensor in all three shapes Home Assistant has used for
+it, so a dashboard written in the newest one stopped reporting no sensor at all. It read them all at
+once. The shapes are alternatives, not additions: a source states its power once, and a dashboard
+carrying two of them names those watts twice, often under two different entity ids, a signed net
+sensor and the from/to pair it is the sum of. Both were summed, so grids and batteries wired that way
+showed double what was flowing.
+
+The cascade is exclusive again, in the order each family has always had: a battery takes its
+directional pair over its net sensor, a grid and a solar source take their net sensor first, and the
+newest shape's array is read only by a source that states nothing at its top, which is the
+configuration 2026.9.5 set out to support. Six tests pin it, five of which fail on 2026.9.5.
+
+---
+
 ## 2026.9.5
 
 ### Fixed: a scrubbed scene whose chips did not add up

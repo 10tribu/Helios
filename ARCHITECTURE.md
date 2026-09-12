@@ -389,7 +389,12 @@ dashboard config, the same slots the official Energy card reads, re-fetching on
 the core has written it: `stat_rate` and `power_config` at the top of the source,
 and the `power[]` array of the dashboard's power rework, whose entries carry their
 own (`collectRateSlots`). A config written only in the newest shape would otherwise
-read as a source with no live sensor. **Measured values only**: live chips read the
+read as a source with no live sensor. The shapes are read as a FIRST-MATCH cascade,
+never summed: a source states its power once, and a dashboard carrying two of them
+names those watts twice, often under two entity ids (a signed net sensor and the
+from/to pair it is the sum of). The order is per family, a battery taking its
+directional pair before its net sensor and a grid the reverse; several entries of
+the array are several meters and do add up. **Measured values only**: live chips read the
 configured live power sensors directly (`sumLiveWatts` in `data/source-fetch.ts`,
 SI-normalised, summed across every wired source); a value is never derived from a
 cumulative energy meter. The past curves read the recorder's pre-computed `change`
