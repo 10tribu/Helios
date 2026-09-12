@@ -195,6 +195,10 @@ export const hu: Translations = {
       "Előrejelzés: {n} napelemes forrásánál hiányzik a szolgáltató, így a görbe kevesebbet jelez előre, mint amennyit termelni fog. Adja hozzá ott a Helios Forecastot a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
     liveForecastMissing:
       "Előrejelzés: nincs szolgáltató a napelemes forráson, így a görbe a jelennél megáll. Telepítse a Helios Forecastot, és rendelje hozzá a Beállítások > Vezérlőpultok > Energia > Napelemek alatt.",
+    liveHouseOk:
+      "Ház: a körvonala rajta van a térképen, és a jelenet arra van központosítva.",
+    liveHouseMissing:
+      "Ház: a koordinátáin nincs épület a térképen, ezért egy általános ház áll a helyén. Vegye fel a házat az OpenStreetMap-be, vagy javítsa a pontot a Ház helye szakaszban.",
     openEnergyConfig: "Energia beállítások megnyitása",
     buildingsSection: "Otthon és épületek",
     buildingsHint:

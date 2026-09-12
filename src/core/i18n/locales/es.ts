@@ -195,6 +195,10 @@ export const es: Translations = {
       "Previsión: falta un proveedor en {n} de sus fuentes solares, así que la curva anuncia menos de lo que producirá. Añada ahí Helios Forecast en Ajustes > Paneles > Energía > Paneles solares.",
     liveForecastMissing:
       "Previsión: ninguna fuente solar tiene proveedor, así que la curva se detiene en el presente. Instale Helios Forecast y asígnelo en Ajustes > Paneles > Energía > Paneles solares.",
+    liveHouseOk:
+      "Casa: su contorno está en el mapa y la escena está centrada en él.",
+    liveHouseMissing:
+      "Casa: no hay ningún edificio en el mapa en sus coordenadas, así que una casa genérica ocupa su lugar. Añada su casa a OpenStreetMap, o corrija el punto en la sección Ubicación de la casa.",
     openEnergyConfig: "Abrir configuración de Energía",
     buildingsSection: "Casa y edificios",
     buildingsHint:

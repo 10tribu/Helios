@@ -195,6 +195,10 @@ export const lv: Translations = {
       "Prognoze: {n} no jūsu saules avotiem trūkst sniedzēja, tāpēc līkne sola mazāk, nekā jūs saražosiet. Pievienojiet tur Helios Forecast: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
     liveForecastMissing:
       "Prognoze: saules avotam nav sniedzēja, tāpēc līkne apstājas tagadnē. Instalējiet Helios Forecast un piesaistiet to: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
+    liveHouseOk:
+      "Māja: tās kontūra ir kartē un aina ir centrēta uz to.",
+    liveHouseMissing:
+      "Māja: jūsu koordinātās kartē nav nevienas ēkas, tāpēc tās vietā ir vispārīga māja. Pievienojiet savu māju OpenStreetMap vai izlabojiet punktu sadaļā Mājas atrašanās vieta.",
     openEnergyConfig: "Atvērt enerģijas konfigurāciju",
     buildingsSection: "Māja un ēkas",
     buildingsHint:

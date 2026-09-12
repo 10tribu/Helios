@@ -193,6 +193,10 @@ export const sv: Translations = {
       "Prognos: en leverantör saknas på {n} av dina solkällor, så kurvan utlovar mindre än du kommer att producera. Lägg till Helios Forecast där under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
     liveForecastMissing:
       "Prognos: ingen leverantör på din solkälla, så kurvan stannar vid nu. Installera Helios Forecast och koppla det under Inställningar > Instrumentpaneler > Energi > Solpaneler.",
+    liveHouseOk:
+      "Hus: dess kontur finns på kartan och scenen är centrerad på den.",
+    liveHouseMissing:
+      "Hus: ingen byggnad på kartan vid dina koordinater, så ett generiskt hus står i stället. Lägg till ditt hus i OpenStreetMap, eller korrigera punkten i avsnittet Husets plats.",
     openEnergyConfig: "Öppna energikonfiguration",
     buildingsSection: "Hem & byggnader",
     buildingsHint:

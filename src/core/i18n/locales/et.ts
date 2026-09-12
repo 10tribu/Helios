@@ -194,6 +194,10 @@ export const et: Translations = {
       "Prognoos: {n} teie päikeseallikal puudub pakkuja, seega lubab kõver vähem, kui te toodate. Lisage sinna Helios Forecast: Seaded > Töölauad > Energia > Päikesepaneelid.",
     liveForecastMissing:
       "Prognoos: päikeseallikal pole pakkujat, seega kõver lõpeb praegusega. Paigaldage Helios Forecast ja lisage see: Seaded > Töölauad > Energia > Päikesepaneelid.",
+    liveHouseOk:
+      "Maja: selle piirjoon on kaardil ja vaade on sellele keskendatud.",
+    liveHouseMissing:
+      "Maja: teie koordinaatidel pole kaardil hoonet, seega on selle asemel üldine maja. Lisage oma maja OpenStreetMapi või parandage punkt jaotises Maja asukoht.",
     openEnergyConfig: "Ava energia seadistus",
     buildingsSection: "Kodu ja hooned",
     buildingsHint:

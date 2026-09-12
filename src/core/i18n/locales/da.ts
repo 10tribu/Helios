@@ -193,6 +193,10 @@ export const da: Translations = {
       "Prognose: der mangler en udbyder på {n} af dine solkilder, så kurven lover mindre, end du vil producere. Tilføj Helios Forecast der under Indstillinger > Betjeningspaneler > Energi > Solpaneler.",
     liveForecastMissing:
       "Prognose: ingen udbyder på din solkilde, så kurven stopper ved nu. Installer Helios Forecast og tilknyt den under Indstillinger > Betjeningspaneler > Energi > Solpaneler.",
+    liveHouseOk:
+      "Hus: dets omrids ligger på kortet, og scenen er centreret om det.",
+    liveHouseMissing:
+      "Hus: ingen bygning på kortet ved dine koordinater, så et generisk hus står i stedet. Tilføj dit hus til OpenStreetMap, eller ret punktet i afsnittet Husets placering.",
     openEnergyConfig: "Åbn energikonfiguration",
     buildingsSection: "Hjem & bygninger",
     buildingsHint:

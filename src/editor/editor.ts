@@ -85,6 +85,19 @@ export class HeliosCardEditor extends LitElement
     //Latest camera pose published by the live preview (helios-camera-pose event). Captured into the config when
     //the user turns on the camera lock. Null until the preview has published a pose (fires on init + every move).
     private _livePose: { bearing: number; pitch: number } | null = null;
+    //Whether the map had a footprint at the home point, as the live preview last reported it. Undefined until
+    //it has settled, so the status line appears only once there is an answer to give.
+    @state() private _homeMissing?: boolean;
+    private readonly _onHomeBuilding = (e: Event): void =>
+    {
+        const d = (e as CustomEvent).detail;
+        if (!d || typeof d.missing !== 'boolean')
+        {
+            return;
+        }
+        this._homeMissing = d.missing;
+    };
+
     private readonly _onCameraPose = (e: Event): void =>
     {
         const d = (e as CustomEvent).detail;
@@ -113,6 +126,7 @@ export class HeliosCardEditor extends LitElement
     {
         super.disconnectedCallback();
         window.removeEventListener('helios-camera-pose', this._onCameraPose);
+        window.removeEventListener('helios-home-building', this._onHomeBuilding);
         unsubscribeEnergyPrefs(this as unknown as EnergyPrefsHost);
         for (const t of this._sliderDebounce.values())
         {
@@ -198,6 +212,7 @@ export class HeliosCardEditor extends LitElement
     {
         super.connectedCallback();
         window.addEventListener('helios-camera-pose', this._onCameraPose);
+        window.addEventListener('helios-home-building', this._onHomeBuilding);
         this._ensureEntityPicker();
         subscribeEnergyPrefs(this as unknown as EnergyPrefsHost);
     }
@@ -446,6 +461,11 @@ export class HeliosCardEditor extends LitElement
         : (forecastPartial
             ? (t.editor.liveForecastPartial).replace('{n}', String(noForecast))
             : (t.editor.liveForecastMissing))) : nothing}
+
+                ${this._homeMissing === undefined ? nothing
+        : this._liveStatusLine(!this._homeMissing, false, this._homeMissing
+            ? (t.editor.liveHouseMissing)
+            : (t.editor.liveHouseOk))}
 
                 <div class="live-config-link-row">${this._energyConfigLink()}</div>
             </div>

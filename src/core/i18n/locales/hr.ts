@@ -194,6 +194,10 @@ export const hr: Translations = {
       "Prognoza: kod {n} vaših solarnih izvora nedostaje pružatelj pa krivulja najavljuje manje nego što ćete proizvesti. Ondje dodajte Helios Forecast u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
     liveForecastMissing:
       "Prognoza: solarni izvor nema pružatelja pa krivulja staje na sada. Instalirajte Helios Forecast i pridružite ga u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
+    liveHouseOk:
+      "Kuća: njezin obris je na karti, a prizor je centriran na njega.",
+    liveHouseMissing:
+      "Kuća: na vašim koordinatama na karti nema zgrade, pa je zamjenjuje opća kuća. Dodajte svoju kuću u OpenStreetMap ili ispravite točku u odjeljku Lokacija kuće.",
     openEnergyConfig: "Otvori konfiguraciju energije",
     buildingsSection: "Dom i zgrade",
     buildingsHint:

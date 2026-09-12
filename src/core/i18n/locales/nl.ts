@@ -194,6 +194,10 @@ export const nl: Translations = {
       "Voorspelling: er ontbreekt een aanbieder op {n} van uw zonnebronnen, dus de curve kondigt minder aan dan u zult opwekken. Voeg daar Helios Forecast toe via Instellingen > Dashboards > Energie > Zonnepanelen.",
     liveForecastMissing:
       "Voorspelling: geen aanbieder op uw zonnebron, dus de curve stopt bij nu. Installeer Helios Forecast en koppel het via Instellingen > Dashboards > Energie > Zonnepanelen.",
+    liveHouseOk:
+      "Huis: de omtrek staat op de kaart en de scène is erop gecentreerd.",
+    liveHouseMissing:
+      "Huis: geen gebouw op de kaart op uw coördinaten, dus er staat een algemeen huis in de plaats. Voeg uw huis toe aan OpenStreetMap, of corrigeer het punt in het gedeelte Locatie van het huis.",
     openEnergyConfig: "Energieconfiguratie openen",
     buildingsSection: "Huis & gebouwen",
     buildingsHint:

@@ -194,6 +194,10 @@ export const isLocale: Translations = {
       "Spá: veitanda vantar á {n} af sólarlindum þínum, svo ferillinn boðar minna en þú munt framleiða. Bættu Helios Forecast við þar undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
     liveForecastMissing:
       "Spá: enginn veitandi á sólarlindinni, svo ferillinn stöðvast við núið. Settu upp Helios Forecast og tengdu hann undir Stillingar > Mælaborð > Orka > Sólarrafhlöður.",
+    liveHouseOk:
+      "Hús: útlína þess er á kortinu og senan er miðjuð á hana.",
+    liveHouseMissing:
+      "Hús: engin bygging á kortinu við hnitin þín, því stendur almennt hús í staðinn. Bættu húsinu þínu við OpenStreetMap eða leiðréttu punktinn í hlutanum Staðsetning hússins.",
     openEnergyConfig: "Opna orkustillingar",
     buildingsSection: "Heimili & byggingar",
     buildingsHint:

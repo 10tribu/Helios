@@ -194,6 +194,10 @@ export const pl: Translations = {
       "Prognoza: brakuje dostawcy w {n} z Twoich źródeł słonecznych, więc krzywa zapowiada mniej, niż wyprodukujesz. Dodaj tam Helios Forecast w Ustawienia > Pulpity > Energia > Panele słoneczne.",
     liveForecastMissing:
       "Prognoza: brak dostawcy w źródle słonecznym, więc krzywa kończy się na teraz. Zainstaluj Helios Forecast i przypisz go w Ustawienia > Pulpity > Energia > Panele słoneczne.",
+    liveHouseOk:
+      "Dom: jego obrys jest na mapie, a scena jest na nim wyśrodkowana.",
+    liveHouseMissing:
+      "Dom: pod Twoimi współrzędnymi nie ma budynku na mapie, więc jego miejsce zajmuje dom ogólny. Dodaj swój dom do OpenStreetMap lub popraw punkt w sekcji Lokalizacja domu.",
     openEnergyConfig: "Otwórz konfigurację Energii",
     buildingsSection: "Dom i budynki",
     buildingsHint:

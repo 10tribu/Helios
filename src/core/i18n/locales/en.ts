@@ -204,6 +204,10 @@ export const en: Translations = {
       "Forecast: a provider is missing on {n} of your solar sources, so the curve announces less than you will produce. Add Helios Forecast there, under Settings > Dashboards > Energy > Solar panels.",
     liveForecastMissing:
       "Forecast: no provider on your solar source, so the curve stops at now. Install Helios Forecast and attach it under Settings > Dashboards > Energy > Solar panels.",
+    liveHouseOk:
+      "House: its outline is on the map, and the scene is centred on it.",
+    liveHouseMissing:
+      "House: no building on the map at your coordinates, so a generic house stands in for it. Add your house to OpenStreetMap, or correct the point in the Home location section.",
     openEnergyConfig: "Open Energy configuration",
     buildingsSection: "Home & buildings",
     buildingsHint:

@@ -195,6 +195,10 @@ export const cs: Translations = {
       "Předpověď: u {n} z vašich solárních zdrojů chybí poskytovatel, křivka tedy ohlašuje méně, než vyrobíte. Přidejte tam Helios Forecast v Nastavení > Panely > Energie > Solární panely.",
     liveForecastMissing:
       "Předpověď: solární zdroj nemá poskytovatele, křivka tedy končí přítomností. Nainstalujte Helios Forecast a připojte jej v Nastavení > Panely > Energie > Solární panely.",
+    liveHouseOk:
+      "Dům: jeho obrys je na mapě a scéna je na něj vycentrovaná.",
+    liveHouseMissing:
+      "Dům: na vašich souřadnicích není na mapě žádná budova, proto ho zastupuje obecný dům. Přidejte svůj dům do OpenStreetMap, nebo opravte bod v sekci Umístění domu.",
     openEnergyConfig: "Otevřít nastavení energie",
     buildingsSection: "Domov a budovy",
     buildingsHint:

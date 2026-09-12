@@ -175,6 +175,11 @@ export const REAL_HEIGHT_CAP_M       = 25;
 export const REAL_HEIGHT_FALLBACK_M  = 6;
 export const FALLBACK_HOUSE_HALF_W   = 5;
 export const FALLBACK_HOUSE_HALF_D   = 4;
+//How far the nearest footprint may sit from the home point and still BE the home. Zero means the outline
+//contains the point, which is the normal case; past this the nearest building is somebody else's, and drawing
+//it as the home puts a neighbour's roof under the sun arc. Wide enough that a pin dropped in the garden still
+//matches its own house, narrow enough to never reach across a street.
+export const HOME_MATCH_MAX_M        = 25;
 export const BUILDING_CACHE_TTL_MS   = 30 * DAY_MS;
 //OpenFreeMap vector tiles: the buildings source (footprints + real heights via render_height). Free, no key,
 //CORS-open CDN, gzip-served. The TileJSON gives the versioned tile URL template (the planet snapshot rotates).

@@ -193,6 +193,10 @@ export const sl: Translations = {
       "Napoved: pri {n} vaših sončnih virih manjka ponudnik, zato krivulja napoveduje manj, kot boste proizvedli. Tam dodajte Helios Forecast v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
     liveForecastMissing:
       "Napoved: sončni vir nima ponudnika, zato se krivulja ustavi pri zdaj. Namestite Helios Forecast in ga dodelite v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
+    liveHouseOk:
+      "Hiša: njen obris je na zemljevidu in prizor je usmerjen nanj.",
+    liveHouseMissing:
+      "Hiša: na vaših koordinatah na zemljevidu ni stavbe, zato jo nadomešča splošna hiša. Dodajte svojo hišo v OpenStreetMap ali popravite točko v razdelku Lokacija hiše.",
     openEnergyConfig: "Odpri nastavitve Energije",
     buildingsSection: "Dom in stavbe",
     buildingsHint:

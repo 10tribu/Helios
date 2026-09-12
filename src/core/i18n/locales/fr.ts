@@ -194,6 +194,10 @@ export const fr: Translations = {
       "Prévision : il manque un fournisseur sur {n} de vos sources solaires, la courbe annonce donc moins que ce que vous produirez. Ajoutez-y Helios Forecast dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
     liveForecastMissing:
       "Prévision : aucun fournisseur sur votre source solaire, la courbe s'arrête donc au présent. Installez Helios Forecast et attachez-le dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
+    liveHouseOk:
+      "Maison : son contour est sur la carte, la scène est centrée dessus.",
+    liveHouseMissing:
+      "Maison : aucun bâtiment sur la carte à vos coordonnées, une maison générique est dessinée à sa place. Ajoutez votre maison à OpenStreetMap, ou corrigez le point dans la section Emplacement de la maison.",
     openEnergyConfig: "Ouvrir la configuration Énergie",
     buildingsSection: "Maison & bâtiments",
     buildingsHint:

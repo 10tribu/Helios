@@ -195,6 +195,10 @@ export const lt: Translations = {
       "Prognozė: {n} jūsų saulės šaltinių trūksta teikėjo, todėl kreivė žada mažiau, nei pagaminsite. Ten pridėkite Helios Forecast: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
     liveForecastMissing:
       "Prognozė: saulės šaltinis neturi teikėjo, todėl kreivė sustoja ties dabartimi. Įdiekite Helios Forecast ir priskirkite jį: Nustatymai > Skydeliai > Energija > Saulės moduliai.",
+    liveHouseOk:
+      "Namas: jo kontūras yra žemėlapyje, o scena centruota į jį.",
+    liveHouseMissing:
+      "Namas: jūsų koordinatėse žemėlapyje nėra pastato, todėl jo vietoje rodomas bendrinis namas. Pridėkite savo namą į OpenStreetMap arba pataisykite tašką skiltyje Namo vieta.",
     openEnergyConfig: "Atidaryti Energijos konfigūraciją",
     buildingsSection: "Namai ir pastatai",
     buildingsHint:

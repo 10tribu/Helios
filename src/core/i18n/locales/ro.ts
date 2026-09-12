@@ -193,6 +193,10 @@ export const ro: Translations = {
       "Prognoză: lipsește un furnizor la {n} dintre sursele dumneavoastră solare, deci curba anunță mai puțin decât veți produce. Adăugați acolo Helios Forecast în Setări > Tablouri de bord > Energie > Panouri solare.",
     liveForecastMissing:
       "Prognoză: niciun furnizor pe sursa solară, deci curba se oprește la prezent. Instalați Helios Forecast și atașați-l în Setări > Tablouri de bord > Energie > Panouri solare.",
+    liveHouseOk:
+      "Casa: conturul ei este pe hartă, iar scena este centrată pe el.",
+    liveHouseMissing:
+      "Casa: nu există nicio clădire pe hartă la coordonatele dumneavoastră, așa că o casă generică îi ține locul. Adăugați-vă casa în OpenStreetMap sau corectați punctul în secțiunea Amplasarea casei.",
     openEnergyConfig: "Deschide configuratia Energie",
     buildingsSection: "Casa si cladiri",
     buildingsHint:

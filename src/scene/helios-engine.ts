@@ -367,6 +367,18 @@ export class HeliosEngine
     {
         return (this.cfg as Record<string, unknown>)['camera-locked'] === true;
     }
+    //True once a fetch has settled and the map had no footprint at the home point, so the generic box is
+    //standing in for the house. Null while nothing has settled yet, so the editor stays quiet rather than
+    //accusing the map during the loading window.
+    public homeIsPlaceholder(): boolean | null
+    {
+        if (!this._buildingsData)
+        {
+            return null;
+        }
+        return this._buildingsData.some((b) => b.isHome && b.placeholder === true);
+    }
+
     //Current camera pose (bearing/pitch in degrees), or null before the renderer exists. Used by the editor's
     //"use current view" helper to capture the framed angle into the config.
     public getCameraPose(): { bearing: number; pitch: number } | null

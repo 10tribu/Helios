@@ -194,6 +194,10 @@ export const de: Translations = {
       "Prognose: bei {n} Ihrer Solarquellen fehlt ein Anbieter, die Kurve sagt daher weniger an, als Sie erzeugen werden. Fügen Sie dort Helios Forecast hinzu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
     liveForecastMissing:
       "Prognose: kein Anbieter an Ihrer Solarquelle, die Kurve endet daher bei jetzt. Installieren Sie Helios Forecast und ordnen Sie es zu, unter Einstellungen > Dashboards > Energie > Solaranlagen.",
+    liveHouseOk:
+      "Haus: sein Umriss liegt auf der Karte, die Szene ist darauf zentriert.",
+    liveHouseMissing:
+      "Haus: an Ihren Koordinaten liegt kein Gebäude auf der Karte, daher steht ein allgemeines Haus an seiner Stelle. Tragen Sie Ihr Haus in OpenStreetMap ein, oder korrigieren Sie den Punkt im Abschnitt Standort des Hauses.",
     openEnergyConfig: "Energie-Konfiguration öffnen",
     buildingsSection: "Zuhause & Gebäude",
     buildingsHint:

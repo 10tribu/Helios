@@ -194,6 +194,10 @@ export const fi: Translations = {
       "Ennuste: {n} aurinkolähteeltäsi puuttuu tarjoaja, joten käyrä lupaa vähemmän kuin tuotat. Lisää sinne Helios Forecast kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
     liveForecastMissing:
       "Ennuste: aurinkolähteelläsi ei ole tarjoajaa, joten käyrä pysähtyy nykyhetkeen. Asenna Helios Forecast ja liitä se kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
+    liveHouseOk:
+      "Talo: sen ääriviiva on kartalla, ja näkymä on keskitetty siihen.",
+    liveHouseMissing:
+      "Talo: koordinaateissasi ei ole kartalla rakennusta, joten sen tilalla on yleinen talo. Lisää talosi OpenStreetMapiin tai korjaa piste kohdassa Talon sijainti.",
     openEnergyConfig: "Avaa Energia-asetukset",
     buildingsSection: "Koti & rakennukset",
     buildingsHint:
