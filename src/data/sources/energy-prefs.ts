@@ -653,38 +653,49 @@ function collectPowerConfigRates(raw: unknown, flavor: 'grid' | 'battery'): { en
 
 
 //Every live-power slot a source carries, whatever shape the core wrote it in. HA has used three over time:
-//the slot at the top of the source (`stat_rate` or `power_config`), and, from the Energy dashboard's power
-//rework, a `power[]` array whose entries each hold their own `power_config` and/or `stat_rate`. A config
-//written in the new shape has NOTHING at the top level, so a reader that only looks there reports a source
-//with no live sensor while the dashboard shows one (#440). All three are read, and the result de-duped,
-//because the new shape repeats the same entity at both levels of its own entry.
+//the slot at the top of the source (`stat_rate`), a `power_config` block, and, from the Energy dashboard's
+//power rework, a `power[]` array whose entries each hold their own of both.
+//
+//The shapes are ALTERNATIVES, never additions. A source states its live power once, and a dashboard carrying
+//two of them names that one power twice, often under two different entity ids: a signed net sensor at the top
+//and its from/to pair in `power_config` are the same watts written two ways. Summing them reports double what
+//is flowing. So this is a first-match cascade, in the order each family has always had: a battery's
+//directional pair is the richer reading and comes before its net sensor, while a grid states its net sensor
+//first, which is the one Home Assistant's own tile shows. The array is read last, and is the whole of what a
+//config written entirely in the newest shape carries.
+function rateCascade(level: Record<string, unknown>, flavor: 'grid' | 'battery'): { entity: string; inverted: boolean }[]
+{
+    const direct = pickFirstString(level['stat_rate']);
+    const top = direct ? [{ entity: direct, inverted: flavor === 'battery' }] : [];
+    const block = collectPowerConfigRates(level['power_config'], flavor);
+    if (flavor === 'battery')
+    {
+        return block.length > 0 ? block : top;
+    }
+    return top.length > 0 ? top : block;
+}
+
+
 function collectRateSlots(src: Record<string, unknown>, flavor: 'grid' | 'battery'): { entity: string; inverted: boolean }[]
 {
-    const out: { entity: string; inverted: boolean }[] = [];
-    const add = (slots: { entity: string; inverted: boolean }[]): void =>
+    const stated = rateCascade(src, flavor);
+    if (stated.length > 0)
     {
-        for (const slot of slots)
+        return stated;
+    }
+    //Nothing at the top of the source: the config is written in the newest shape alone. Each entry of the
+    //array is a meter in its own right, so several of them do add up, de-duped because an entry repeats its
+    //own entity at both of its levels.
+    const out: { entity: string; inverted: boolean }[] = [];
+    for (const entry of asRecordArray(src['power']))
+    {
+        for (const slot of rateCascade(entry, flavor))
         {
             if (!out.some((seen) => seen.entity === slot.entity))
             {
                 out.push(slot);
             }
         }
-    };
-    const direct = pickFirstString(src['stat_rate']);
-    if (direct)
-    {
-        add([{ entity: direct, inverted: flavor === 'battery' }]);
-    }
-    add(collectPowerConfigRates(src['power_config'], flavor));
-    for (const slot of asRecordArray(src['power']))
-    {
-        const nested = pickFirstString(slot['stat_rate']);
-        if (nested)
-        {
-            add([{ entity: nested, inverted: flavor === 'battery' }]);
-        }
-        add(collectPowerConfigRates(slot['power_config'], flavor));
     }
     return out;
 }
