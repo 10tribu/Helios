@@ -7,8 +7,9 @@ import {
     extractPerEntity,
     sumChangeForDay,
     changeSeriesToWatts,
+    wattsAtFromChangeSeries,
 } from '../src/data/sources/energy-stats';
-import { HOUR_MS, DAY_MS } from '../src/core/config/constants';
+import { HOUR_MS, DAY_MS, COARSE_PROBE_MS } from '../src/core/config/constants';
 
 type Bucket = { startMs: number; endMs: number; kwh: number };
 const bucket = (i: number, kwh: number): Bucket => ({ startMs: i * HOUR_MS, endMs: (i + 1) * HOUR_MS, kwh });
@@ -134,5 +135,78 @@ describe('changeSeriesToWatts', () =>
         const out = changeSeriesToWatts(buckets, 0, HOUR_MS, 11, 11 * HOUR_MS);
         expect(out[0]).toBe(1000);
         expect(out[10]).toBeNull(); //spike rejected, bucket left empty
+    });
+});
+
+
+describe('wattsAtFromChangeSeries', () =>
+{
+    const FIVE = 5 * 60_000;
+    //Five-minute buckets, the recorder period the card asks for on a sub-hourly cadence.
+    const slot = (i: number, kwh: number): Bucket => ({ startMs: i * FIVE, endMs: (i + 1) * FIVE, kwh });
+    const at = (i: number) => i * FIVE + FIVE / 2;
+
+    it('is null when no bucket covers the window, and 0 W when the window is genuinely empty', () =>
+    {
+        expect(wattsAtFromChangeSeries(null, at(0))).toBeNull();
+        expect(wattsAtFromChangeSeries([], at(0))).toBeNull();
+        //A window past the end of the series reaches nothing: no reading, not a reading of zero.
+        expect(wattsAtFromChangeSeries([slot(0, 1)], at(20))).toBeNull();
+        //A meter that really did nothing reads zero rather than dropping its chip.
+        expect(wattsAtFromChangeSeries([slot(0, 0), slot(1, 0), slot(2, 0)], at(1))).toBe(0);
+    });
+
+    it('averages the window, so a steady meter reads its steady power', () =>
+    {
+        //0.1 kWh in each five-minute bucket is 1.2 kW held flat.
+        const steady = [0, 1, 2, 3, 4].map(i => slot(i, 0.1));
+        expect(wattsAtFromChangeSeries(steady, at(2))).toBeCloseTo(1200, 6);
+    });
+
+    it('reads the same power whichever bucket of a steady run the instant falls in', () =>
+    {
+        const steady = [0, 1, 2, 3, 4, 5, 6].map(i => slot(i, 0.1));
+        const reads = [2, 3, 4].map(i => wattsAtFromChangeSeries(steady, at(i)));
+        expect(new Set(reads.map(w => Math.round(w!)))).toEqual(new Set([1200]));
+    });
+
+    it('does not read zero while a counter that advances in coarse steps is running', () =>
+    {
+        //A Linky index ticking every 0.1 kWh under a steady 1.2 kW load: the recorder lands a whole step in one
+        //bucket and nothing in the next, so the bucket holding the instant is empty while the house is drawing.
+        const linky = [slot(0, 0.1), slot(1, 0), slot(2, 0.2), slot(3, 0), slot(4, 0.1)];
+        const w = wattsAtFromChangeSeries(linky, at(1));
+        expect(w).not.toBe(0);
+        expect(w).toBeCloseTo(1200, 6); //0.3 kWh over the 15-minute window
+    });
+
+    it('puts two meters of different natures on the same window, so a scrubbed scene adds up', () =>
+    {
+        //Same 0.25 kWh over the same window, one meter reporting in every bucket and unevenly, the other in one
+        //lump. Read on their own terms the two disagree; read on one window they are the same 1 kW.
+        const fine  = [slot(0, 0.10), slot(1, 0.05), slot(2, 0.10)];
+        const lumpy = [slot(0, 0), slot(1, 0.25), slot(2, 0)];
+        expect(wattsAtFromChangeSeries(fine, at(1))).toBeCloseTo(1000, 6);
+        expect(wattsAtFromChangeSeries(lumpy, at(1))).toBeCloseTo(1000, 6);
+    });
+
+    it('pro-rates a bucket that straddles the edge of the window', () =>
+    {
+        //One hour-long bucket of 1 kWh: the window only sees its own width of it, so the average is 1 kW.
+        const hourly = [{ startMs: 0, endMs: HOUR_MS, kwh: 1 }];
+        expect(wattsAtFromChangeSeries(hourly, HOUR_MS / 2)).toBeCloseTo(1000, 6);
+    });
+
+    it('reads a window exactly COARSE_PROBE_MS wide, centred on the instant', () =>
+    {
+        //Energy only outside the window on either side stays outside it.
+        const edges = [slot(0, 9), slot(1, 0), slot(2, 0), slot(3, 0), slot(4, 9)];
+        expect(wattsAtFromChangeSeries(edges, at(2))).toBe(0);
+        expect(COARSE_PROBE_MS).toBe(3 * FIVE);
+    });
+
+    it('never reports a negative power from a meter that went backwards', () =>
+    {
+        expect(wattsAtFromChangeSeries([slot(0, 0.1), slot(1, -0.5), slot(2, 0.1)], at(1))).toBe(0);
     });
 });

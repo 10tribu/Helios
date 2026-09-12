@@ -122,8 +122,8 @@ export const OTHER_ERROR_BACKOFF_MS: readonly number[] = [1 * 60_000, 5 * 60_000
 
 //=== Energy-stats (change-series) ===
 export const CHANGE_REFRESH_MS = 60_000;
+//Width of the window a scrubbed readout is averaged over, centred on the instant asked for.
 export const COARSE_PROBE_MS   = 15 * 60_000;
-export const DENSE_FRACTION    = 0.6;
 //Store-curve coarse-meter smoothing: the largest report interval (in store buckets) a single report is spread back
 //across. Past it, the buckets before a report keep their zero, so a long genuine gap (an overnight lull before the
 //first daytime reading) is never smeared into the reading that follows it.
