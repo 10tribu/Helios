@@ -108,11 +108,12 @@ export const pl: Translations = {
       "Liczba miejsc dziesiętnych pokazywanych przy każdej wartości, aby chipy wyglądały jednolicie. Dotyczy wartości w kW (pełne waty pozostają liczbami całkowitymi) oraz kWh. Od 0 do 3, domyślnie 1.",
     powerUnit: "Jednostka mocy",
     powerUnitHelp:
-      "Jednostka dla każdego odczytu mocy na karcie (chipy, dymki wykresu). Energia też za nią podąża, aby karta pozostała spójna: kW łączy się z kWh, W z Wh.",
+      "Jednostka dla każdego odczytu mocy na karcie (chipy, dymki wykresu). Energia też za nią podąża, aby karta pozostała spójna: kW łączy się z kWh, W z Wh. Adaptacyjna dobiera jednostkę do każdej wartości: waty poniżej kilowata, kilowaty powyżej.",
     energyUnit: "Jednostka energii",
     energyUnitHelp:
       "Jednostka dla wszystkich sum energii (krzywa dnia, panel szczegółów, dzienne sumy na osi czasu). Automatyczna podąża za jednostką mocy powyżej; wybierz Wh lub kWh, aby ustawić ją niezależnie.",
     energyUnitAuto: "Automatyczna",
+    unitAdaptive: "Adaptacyjna",
     irradianceUnit: "Jednostka stałej słonecznej",
     irradianceUnitHelp:
       "Jednostka odczytu stałej słonecznej (nasłonecznienia) nad słońcem.",
@@ -188,6 +189,16 @@ export const pl: Translations = {
       "Zużycie domu: pokazane, wyliczone z powyższych rodzin na żywo.",
     liveHomeNote:
       "Zużycie domu pojawia się, gdy każda skonfigurowana powyżej rodzina ma swój czujnik na żywo.",
+    liveForecastOk:
+      "Prognoza: każde źródło słoneczne ma przypisanego dostawcę.",
+    liveForecastPartial:
+      "Prognoza: brakuje dostawcy w {n} z Twoich źródeł słonecznych, więc krzywa zapowiada mniej, niż wyprodukujesz. Dodaj tam Helios Forecast w Ustawienia > Pulpity > Energia > Panele słoneczne.",
+    liveForecastMissing:
+      "Prognoza: brak dostawcy w źródle słonecznym, więc krzywa kończy się na teraz. Zainstaluj Helios Forecast i przypisz go w Ustawienia > Pulpity > Energia > Panele słoneczne.",
+    liveHouseOk:
+      "Dom: jego obrys jest na mapie, a scena jest na nim wyśrodkowana.",
+    liveHouseMissing:
+      "Dom: pod Twoimi współrzędnymi nie ma budynku na mapie, więc jego miejsce zajmuje dom ogólny. Dodaj swój dom do OpenStreetMap lub popraw punkt w sekcji Lokalizacja domu.",
     openEnergyConfig: "Otwórz konfigurację Energii",
     buildingsSection: "Dom i budynki",
     buildingsHint:

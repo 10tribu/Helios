@@ -85,6 +85,19 @@ export class HeliosCardEditor extends LitElement
     //Latest camera pose published by the live preview (helios-camera-pose event). Captured into the config when
     //the user turns on the camera lock. Null until the preview has published a pose (fires on init + every move).
     private _livePose: { bearing: number; pitch: number } | null = null;
+    //Whether the map had a footprint at the home point, as the live preview last reported it. Undefined until
+    //it has settled, so the status line appears only once there is an answer to give.
+    @state() private _homeMissing?: boolean;
+    private readonly _onHomeBuilding = (e: Event): void =>
+    {
+        const d = (e as CustomEvent).detail;
+        if (!d || typeof d.missing !== 'boolean')
+        {
+            return;
+        }
+        this._homeMissing = d.missing;
+    };
+
     private readonly _onCameraPose = (e: Event): void =>
     {
         const d = (e as CustomEvent).detail;
@@ -113,6 +126,7 @@ export class HeliosCardEditor extends LitElement
     {
         super.disconnectedCallback();
         window.removeEventListener('helios-camera-pose', this._onCameraPose);
+        window.removeEventListener('helios-home-building', this._onHomeBuilding);
         unsubscribeEnergyPrefs(this as unknown as EnergyPrefsHost);
         for (const t of this._sliderDebounce.values())
         {
@@ -198,6 +212,7 @@ export class HeliosCardEditor extends LitElement
     {
         super.connectedCallback();
         window.addEventListener('helios-camera-pose', this._onCameraPose);
+        window.addEventListener('helios-home-building', this._onHomeBuilding);
         this._ensureEntityPicker();
         subscribeEnergyPrefs(this as unknown as EnergyPrefsHost);
     }
@@ -398,6 +413,14 @@ export class HeliosCardEditor extends LitElement
         const gridLive     = d.gridStatRates.length > 0 && !gridFlagged;
         const batteryLive  = !batteryLiveIsBucketSourced(d);
 
+        //The forecast curve is drawn per solar SOURCE, from the provider attached to it in the Energy dashboard.
+        //Installing Helios-Forecast is not enough and nothing else says so: the card simply draws no future, which
+        //reads as a broken forecast rather than an unattached one.
+        const solarSources = this._energyDefaults?.solarSources ?? 0;
+        const noForecast   = this._energyDefaults?.solarSourcesWithoutForecast ?? 0;
+        const forecastWired = solarSources > 0 && noForecast === 0;
+        const forecastPartial = noForecast > 0 && noForecast < solarSources;
+
         //Home consumption is derived: it needs every family the user DID configure to expose its live sensor.
         const homeReady = (solarWired || gridWired || batteryWired)
             && (!solarWired   || solarLive)
@@ -432,6 +455,17 @@ export class HeliosCardEditor extends LitElement
                 ${this._liveStatusLine(homeReady, false, homeReady
         ? (t.editor.liveHomeOk)
         : (t.editor.liveHomeNote))}
+
+                ${solarWired ? this._liveStatusLine(forecastWired, false, forecastWired
+        ? (t.editor.liveForecastOk)
+        : (forecastPartial
+            ? (t.editor.liveForecastPartial).replace('{n}', String(noForecast))
+            : (t.editor.liveForecastMissing))) : nothing}
+
+                ${this._homeMissing === undefined ? nothing
+        : this._liveStatusLine(!this._homeMissing, false, this._homeMissing
+            ? (t.editor.liveHouseMissing)
+            : (t.editor.liveHouseOk))}
 
                 <div class="live-config-link-row">${this._energyConfigLink()}</div>
             </div>
@@ -1340,10 +1374,12 @@ export class HeliosCardEditor extends LitElement
                 ${this._renderSlider('max-expected-power', t.editor.maxExpectedPower, MIN_MAX_EXPECTED_POWER_W, MAX_MAX_EXPECTED_POWER_W, 500, DEFAULT_MAX_EXPECTED_POWER_W, ' W')}
                 <div class="field-help">${t.editor.maxExpectedPowerHelp}</div>
                 ${this._renderSelect('power-unit', t.editor.powerUnit,
-        [{ value: 'kW', label: 'kW' }, { value: 'W', label: 'W' }], 'kW',
+        [{ value: 'kW', label: 'kW' }, { value: 'W', label: 'W' },
+            { value: 'adaptive', label: t.editor.unitAdaptive }], 'kW',
         t.editor.powerUnitHelp)}
                 ${this._renderSelect('energy-unit', t.editor.energyUnit,
-        [{ value: 'auto', label: t.editor.energyUnitAuto }, { value: 'kWh', label: 'kWh' }, { value: 'Wh', label: 'Wh' }], 'auto',
+        [{ value: 'auto', label: t.editor.energyUnitAuto }, { value: 'kWh', label: 'kWh' },
+            { value: 'Wh', label: 'Wh' }, { value: 'adaptive', label: t.editor.unitAdaptive }], 'auto',
         t.editor.energyUnitHelp)}
                 ${this._renderSelect('irradiance-unit', t.editor.irradianceUnit,
         [{ value: 'W/m²', label: 'W/m²' }, { value: 'kW/m²', label: 'kW/m²' }, { value: 'W/ft²', label: 'W/ft²' }], 'W/m²',

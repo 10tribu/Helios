@@ -108,11 +108,12 @@ export const lv: Translations = {
       "Decimāldaļu skaits, kas tiek parādīts katrā vērtības nolasījumā, lai mikroshēmas izskatītos vienveidīgi. Attiecas uz kW vērtībām (veseli vati paliek bez decimāldaļām) un uz kWh. No 0 līdz 3, noklusējums 1.",
     powerUnit: "Jaudas mērvienība",
     powerUnitHelp:
-      "Mērvienība katram jaudas rādījumam kartītē (mikroshēmas, grafika rīka padomi). Enerģija tai arī seko, tāpēc kartīte paliek konsekventa: kW veido pāri ar kWh, W ar Wh.",
+      "Mērvienība katram jaudas rādījumam kartītē (mikroshēmas, grafika rīka padomi). Enerģija tai arī seko, tāpēc kartīte paliek konsekventa: kW veido pāri ar kWh, W ar Wh. Adaptīva izvēlas mērvienību katrai vērtībai: vati zem kilovata, kilovati virs tā.",
     energyUnit: "Enerģijas mērvienība",
     energyUnitHelp:
       "Mērvienība visām enerģijas kopsummām (dienas līknei, detalizētās informācijas panelim, laika skalas dienas kopsummām). Automātiski seko iepriekš norādītajai jaudas mērvienībai; izvēlieties Wh vai kWh, lai iestatītu to atsevišķi.",
     energyUnitAuto: "Automātiski",
+    unitAdaptive: "Adaptīva",
     irradianceUnit: "Saules konstantes mērvienība",
     irradianceUnitHelp:
       "Mērvienība saules konstantes (apstarojuma) rādījumam virs saules.",
@@ -189,6 +190,16 @@ export const lv: Translations = {
       "Mājas patēriņš: rādīts, iegūts no iepriekš minētajām reāllaika saimēm.",
     liveHomeNote:
       "Mājas patēriņš parādās, tiklīdz katrai iepriekš konfigurētajai saimei ir savs reāllaika sensors.",
+    liveForecastOk:
+      "Prognoze: katram saules avotam ir piesaistīts sniedzējs.",
+    liveForecastPartial:
+      "Prognoze: {n} no jūsu saules avotiem trūkst sniedzēja, tāpēc līkne sola mazāk, nekā jūs saražosiet. Pievienojiet tur Helios Forecast: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
+    liveForecastMissing:
+      "Prognoze: saules avotam nav sniedzēja, tāpēc līkne apstājas tagadnē. Instalējiet Helios Forecast un piesaistiet to: Iestatījumi > Paneļi > Enerģija > Saules paneļi.",
+    liveHouseOk:
+      "Māja: tās kontūra ir kartē un aina ir centrēta uz to.",
+    liveHouseMissing:
+      "Māja: jūsu koordinātās kartē nav nevienas ēkas, tāpēc tās vietā ir vispārīga māja. Pievienojiet savu māju OpenStreetMap vai izlabojiet punktu sadaļā Mājas atrašanās vieta.",
     openEnergyConfig: "Atvērt enerģijas konfigurāciju",
     buildingsSection: "Māja un ēkas",
     buildingsHint:

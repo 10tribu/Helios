@@ -108,11 +108,12 @@ export const pt: Translations = {
       "Número de decimais mostrado em cada leitura de valor, para que os chips fiquem uniformes. Aplica-se aos valores em kW (os watts inteiros mantêm-se sem decimais) e aos kWh. De 0 a 3, predefinição 1.",
     powerUnit: "Unidade de potência",
     powerUnitHelp:
-      "Unidade para cada leitura de potência no cartão (chips, dicas do gráfico). A energia também a segue, para que o cartão se mantenha consistente: kW combina com kWh, W com Wh.",
+      "Unidade para cada leitura de potência no cartão (chips, dicas do gráfico). A energia também a segue, para que o cartão se mantenha consistente: kW combina com kWh, W com Wh. Adaptativa escolhe a unidade valor a valor: watts abaixo de um quilowatt, quilowatts acima.",
     energyUnit: "Unidade de energia",
     energyUnitHelp:
       "Unidade para cada total de energia (a curva do dia, o painel de detalhes, os totais diários da linha do tempo). Automático segue a unidade de potência acima; escolha Wh ou kWh para defini-la separadamente.",
     energyUnitAuto: "Automático",
+    unitAdaptive: "Adaptativa",
     irradianceUnit: "Unidade da constante solar",
     irradianceUnitHelp:
       "Unidade para a leitura da constante solar (irradiância) acima do sol.",
@@ -189,6 +190,16 @@ export const pt: Translations = {
       "Consumo da casa: mostrado, derivado das famílias ao vivo acima.",
     liveHomeNote:
       "Consumo da casa: aparece assim que cada família configurada acima tiver o seu sensor ao vivo.",
+    liveForecastOk:
+      "Previsão: cada fonte solar tem um fornecedor associado.",
+    liveForecastPartial:
+      "Previsão: falta um fornecedor em {n} das suas fontes solares, pelo que a curva anuncia menos do que irá produzir. Adicione aí o Helios Forecast em Definições > Painéis > Energia > Painéis solares.",
+    liveForecastMissing:
+      "Previsão: nenhum fornecedor na sua fonte solar, pelo que a curva para no presente. Instale o Helios Forecast e associe-o em Definições > Painéis > Energia > Painéis solares.",
+    liveHouseOk:
+      "Casa: o seu contorno está no mapa e a cena está centrada nele.",
+    liveHouseMissing:
+      "Casa: nenhum edifício no mapa nas suas coordenadas, por isso uma casa genérica ocupa o lugar. Adicione a sua casa ao OpenStreetMap, ou corrija o ponto na secção Localização da casa.",
     openEnergyConfig: "Abrir configuração de Energia",
     buildingsSection: "Casa e edifícios",
     buildingsHint:

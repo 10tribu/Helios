@@ -108,11 +108,12 @@ export const sl: Translations = {
       "Število decimalnih mest, prikazanih pri vsaki vrednosti, da so čipi videti enotni. Velja za vrednosti v kW (cele vatne vrednosti ostanejo cela števila) in za kWh. 0 do 3, privzeto 1.",
     powerUnit: "Enota moči",
     powerUnitHelp:
-      "Enota za vsak prikaz moči na kartici (čipi, namigi grafa). Energija ji tudi sledi, da kartica ostane usklajena: kW se ujema s kWh, W z Wh.",
+      "Enota za vsak prikaz moči na kartici (čipi, namigi grafa). Energija ji tudi sledi, da kartica ostane usklajena: kW se ujema s kWh, W z Wh. Prilagodljiva izbere enoto za vsako vrednost: vati pod kilovatom, kilovati nad njim.",
     energyUnit: "Enota energije",
     energyUnitHelp:
       "Enota za vse skupne vrednosti energije (dnevna krivulja, podrobnostni pladenj, dnevni seštevki na časovnici). Samodejno sledi zgornji enoti moči; izberite Wh ali kWh za ločeno nastavitev.",
     energyUnitAuto: "Samodejno",
+    unitAdaptive: "Prilagodljiva",
     irradianceUnit: "Enota sončne konstante",
     irradianceUnitHelp:
       "Enota za prikaz sončne konstante (obsevanja) nad soncem.",
@@ -187,6 +188,16 @@ export const sl: Translations = {
     liveHomeOk: "Poraba doma: prikazana, izpeljana iz zgornjih živih družin.",
     liveHomeNote:
       "Poraba doma se prikaže, ko ima vsaka zgoraj nastavljena družina svoj živi senzor.",
+    liveForecastOk:
+      "Napoved: vsakemu sončnemu viru je dodeljen ponudnik.",
+    liveForecastPartial:
+      "Napoved: pri {n} vaših sončnih virih manjka ponudnik, zato krivulja napoveduje manj, kot boste proizvedli. Tam dodajte Helios Forecast v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
+    liveForecastMissing:
+      "Napoved: sončni vir nima ponudnika, zato se krivulja ustavi pri zdaj. Namestite Helios Forecast in ga dodelite v Nastavitve > Nadzorne plošče > Energija > Sončni paneli.",
+    liveHouseOk:
+      "Hiša: njen obris je na zemljevidu in prizor je usmerjen nanj.",
+    liveHouseMissing:
+      "Hiša: na vaših koordinatah na zemljevidu ni stavbe, zato jo nadomešča splošna hiša. Dodajte svojo hišo v OpenStreetMap ali popravite točko v razdelku Lokacija hiše.",
     openEnergyConfig: "Odpri nastavitve Energije",
     buildingsSection: "Dom in stavbe",
     buildingsHint:

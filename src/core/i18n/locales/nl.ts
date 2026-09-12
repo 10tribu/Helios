@@ -108,11 +108,12 @@ export const nl: Translations = {
       "Aantal decimalen dat bij elke waardeweergave wordt getoond, zodat de chips uniform ogen. Geldt voor kW-waarden (hele watt blijven gehele getallen) en voor kWh. 0 tot 3, standaard 1.",
     powerUnit: "Vermogenseenheid",
     powerUnitHelp:
-      "Eenheid voor elke vermogensweergave op de kaart (chips, grafiektooltips). Energie volgt deze ook, zodat de kaart consistent blijft: kW hoort bij kWh, W bij Wh.",
+      "Eenheid voor elke vermogensweergave op de kaart (chips, grafiektooltips). Energie volgt deze ook, zodat de kaart consistent blijft: kW hoort bij kWh, W bij Wh. Adaptief kiest de eenheid per waarde: watt onder een kilowatt, kilowatt daarboven.",
     energyUnit: "Energie-eenheid",
     energyUnitHelp:
       "Eenheid voor elk energietotaal (de dagcurve, het detailpaneel, de dagtotalen van de tijdlijn). Automatisch volgt de vermogenseenheid hierboven; kies Wh of kWh om deze apart in te stellen.",
     energyUnitAuto: "Automatisch",
+    unitAdaptive: "Adaptief",
     irradianceUnit: "Eenheid van de zonneconstante",
     irradianceUnitHelp:
       "Eenheid voor de weergave van de zonneconstante (instraling) boven de zon.",
@@ -188,6 +189,16 @@ export const nl: Translations = {
       "Huishoudelijk verbruik: getoond, afgeleid van de bovenstaande live families.",
     liveHomeNote:
       "Huishoudelijk verbruik: verschijnt zodra elke hierboven geconfigureerde familie zijn live sensor heeft.",
+    liveForecastOk:
+      "Voorspelling: aan elke zonnebron is een aanbieder gekoppeld.",
+    liveForecastPartial:
+      "Voorspelling: er ontbreekt een aanbieder op {n} van uw zonnebronnen, dus de curve kondigt minder aan dan u zult opwekken. Voeg daar Helios Forecast toe via Instellingen > Dashboards > Energie > Zonnepanelen.",
+    liveForecastMissing:
+      "Voorspelling: geen aanbieder op uw zonnebron, dus de curve stopt bij nu. Installeer Helios Forecast en koppel het via Instellingen > Dashboards > Energie > Zonnepanelen.",
+    liveHouseOk:
+      "Huis: de omtrek staat op de kaart en de scène is erop gecentreerd.",
+    liveHouseMissing:
+      "Huis: geen gebouw op de kaart op uw coördinaten, dus er staat een algemeen huis in de plaats. Voeg uw huis toe aan OpenStreetMap, of corrigeer het punt in het gedeelte Locatie van het huis.",
     openEnergyConfig: "Energieconfiguratie openen",
     buildingsSection: "Huis & gebouwen",
     buildingsHint:

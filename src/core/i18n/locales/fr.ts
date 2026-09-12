@@ -107,11 +107,12 @@ export const fr: Translations = {
     sunChipModePosition: "Position du soleil",
     powerUnit: "Unité de puissance",
     powerUnitHelp:
-      "Unité de tous les affichages de puissance de la carte (chips, infobulles du graphe). Par défaut, l'énergie suit aussi (kW va avec kWh, W avec Wh), sauf si vous choisissez sa propre unité ci-dessous.",
+      "Unité de tous les affichages de puissance de la carte (chips, infobulles du graphe). Par défaut, l'énergie suit aussi (kW va avec kWh, W avec Wh), sauf si vous choisissez sa propre unité ci-dessous. Adaptatif choisit l'unité valeur par valeur : des watts sous le kilowatt, des kilowatts au-dessus.",
     energyUnit: "Unité d'énergie",
     energyUnitHelp:
       "Unité de tous les totaux d'énergie (la courbe du jour, le panneau de détail, les totaux du jour dans la timeline). Auto suit l'unité de puissance ci-dessus ; choisissez Wh ou kWh pour la régler séparément.",
     energyUnitAuto: "Auto",
+    unitAdaptive: "Adaptatif",
     irradianceUnit: "Unité de constante solaire",
     irradianceUnitHelp:
       "Unité de la constante solaire (irradiance) affichée au-dessus du soleil.",
@@ -188,6 +189,16 @@ export const fr: Translations = {
       "Consommation de la maison : affichée, dérivée des familles live ci-dessus.",
     liveHomeNote:
       "La consommation de la maison s'affiche dès que chaque famille configurée ci-dessus a son capteur live.",
+    liveForecastOk:
+      "Prévision : un fournisseur est attaché à chaque source solaire.",
+    liveForecastPartial:
+      "Prévision : il manque un fournisseur sur {n} de vos sources solaires, la courbe annonce donc moins que ce que vous produirez. Ajoutez-y Helios Forecast dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
+    liveForecastMissing:
+      "Prévision : aucun fournisseur sur votre source solaire, la courbe s'arrête donc au présent. Installez Helios Forecast et attachez-le dans Paramètres > Tableaux de bord > Énergie > Panneaux solaires.",
+    liveHouseOk:
+      "Maison : son contour est sur la carte, la scène est centrée dessus.",
+    liveHouseMissing:
+      "Maison : aucun bâtiment sur la carte à vos coordonnées, une maison générique est dessinée à sa place. Ajoutez votre maison à OpenStreetMap, ou corrigez le point dans la section Emplacement de la maison.",
     openEnergyConfig: "Ouvrir la configuration Énergie",
     buildingsSection: "Maison & bâtiments",
     buildingsHint:
