@@ -394,7 +394,16 @@ configured live power sensors directly (`sumLiveWatts` in `data/source-fetch.ts`
 SI-normalised, summed across every wired source); a value is never derived from a
 cumulative energy meter. The past curves read the recorder's pre-computed `change`
 metric, the exact numbers the Energy dashboard shows, so the two surfaces agree to
-the watt-hour. `data/sources/pv.ts`, `battery.ts`, `grid.ts`, `irradiance.ts` own
+the watt-hour.
+
+A scrubbed READOUT (a chip, a tooltip) is the average over a fixed window centred on
+the instant asked for (`wattsAtFromChangeSeries`), never the single bucket holding it.
+A counter that advances in coarse steps, a Linky index ticking every 0.1 kWh, lands a
+whole step in one bucket and nothing in the next, so its own bucket reads zero under a
+steady kilowatt. Averaging also puts every readout of one frame on the same span,
+which is what lets a scrubbed scene's chips add up: a house cannot draw less than the
+devices inside it, and two meters read over two different windows can say exactly
+that. `data/sources/pv.ts`, `battery.ts`, `grid.ts`, `irradiance.ts` own
 the live + history resolution per source; `data/energy-forecast.ts` reads the
 dashboard's configured solar-forecast provider, preferring the
 [Helios-Forecast](https://github.com/ReikanYsora/Helios-Forecast) integration's own

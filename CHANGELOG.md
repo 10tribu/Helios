@@ -9,6 +9,18 @@ and the project follows a date-based versioning scheme (`YEAR.MONTH.PATCH`).
 
 ## 2026.9.5
 
+### Fixed: a scrubbed scene whose chips did not add up
+
+Rewinding the timeline, a readout took the single recorder bucket holding the instant when its meter
+looked fine-grained, and averaged a window otherwise. A counter that advances in coarse steps passes
+for fine-grained and is neither: a Linky index ticking every 0.1 kWh lands a whole step in one bucket
+and nothing in the next, so under a steady 1.2 kW its own bucket reads zero. The home chip then
+showed the inverter's standby while two device groups drew a hundred and sixty watts, which is
+arithmetically impossible, and each number was right by its own rule. Every scrubbed value is now the
+average over the same window. Measured against the live power sensors of one house, the error on the
+quantised meter falls by a fifth and its false zeros go, for a few watts on the meters that were
+already read correctly.
+
 ### Added: an adaptive power and energy unit
 
 The unit was a single global choice, and a house is not global. A heat pump sits in kilowatts, a
