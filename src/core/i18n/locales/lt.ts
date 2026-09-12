@@ -108,11 +108,12 @@ export const lt: Translations = {
       "Dešimtainių skaitmenų skaičius, rodomas kiekviename vertės rodmenyje, kad lustai atrodytų vienodi. Taikoma kW vertėms (sveiki vatai lieka sveikieji skaičiai) ir kWh. Nuo 0 iki 3, numatytasis 1.",
     powerUnit: "Galios vienetas",
     powerUnitHelp:
-      "Vienetas kiekvienam galios rodmeniui kortelėje (lustai, grafiko debesėliai). Energija taip pat jo laikosi, kad kortelė liktų nuosekli: kW poruojasi su kWh, W su Wh.",
+      "Vienetas kiekvienam galios rodmeniui kortelėje (lustai, grafiko debesėliai). Energija taip pat jo laikosi, kad kortelė liktų nuosekli: kW poruojasi su kWh, W su Wh. Prisitaikanti parenka vienetą kiekvienai reikšmei: vatai žemiau kilovato, kilovatai virš jo.",
     energyUnit: "Energijos vienetas",
     energyUnitHelp:
       "Vienetas visoms energijos sumoms (dienos kreivei, informacijos skydeliui, laiko juostos dienos sumoms). „Automatinis“ seka aukščiau esantį galios vienetą; pasirinkite Wh arba kWh, kad nustatytumėte jį atskirai.",
     energyUnitAuto: "Automatinis",
+    unitAdaptive: "Prisitaikanti",
     irradianceUnit: "Saulės konstantos vienetas",
     irradianceUnitHelp:
       "Vienetas saulės konstantos (apšvitos) rodmeniui virš saulės.",

@@ -108,11 +108,12 @@ export const cs: Translations = {
       "Počet desetinných míst zobrazených u každé hodnoty, aby čipy vypadaly jednotně. Platí pro hodnoty v kW (celé watty zůstávají celočíselné) a pro kWh. 0 až 3, výchozí 1.",
     powerUnit: "Jednotka výkonu",
     powerUnitHelp:
-      "Jednotka pro každý údaj výkonu na kartě (čipy, popisky grafu). Energie ji také následuje, takže karta zůstává konzistentní: kW se pojí s kWh, W s Wh.",
+      "Jednotka pro každý údaj výkonu na kartě (čipy, popisky grafu). Energie ji také následuje, takže karta zůstává konzistentní: kW se pojí s kWh, W s Wh. Adaptivní volí jednotku podle hodnoty: watty pod kilowattem, kilowatty nad ním.",
     energyUnit: "Jednotka energie",
     energyUnitHelp:
       "Jednotka pro všechny součty energie (denní křivka, panel podrobností, denní součty na časové ose). Automaticky se řídí jednotkou výkonu výše; zvolte Wh nebo kWh pro její samostatné nastavení.",
     energyUnitAuto: "Automaticky",
+    unitAdaptive: "Adaptivní",
     irradianceUnit: "Jednotka sluneční konstanty",
     irradianceUnitHelp:
       "Jednotka pro údaj sluneční konstanty (ozáření) nad sluncem.",

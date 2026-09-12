@@ -108,11 +108,12 @@ export const de: Translations = {
       "Anzahl der Dezimalstellen, die bei jeder Wertanzeige gezeigt werden, damit die Chips einheitlich wirken. Gilt für kW-Werte (ganze Watt bleiben ganzzahlig) und für kWh. 0 bis 3, Standard 1.",
     powerUnit: "Leistungseinheit",
     powerUnitHelp:
-      "Einheit für jede Leistungsanzeige auf der Karte (Chips, Diagramm-Tooltips). Energie folgt ihr ebenfalls, damit die Karte konsistent bleibt: kW passt zu kWh, W zu Wh.",
+      "Einheit für jede Leistungsanzeige auf der Karte (Chips, Diagramm-Tooltips). Energie folgt ihr ebenfalls, damit die Karte konsistent bleibt: kW passt zu kWh, W zu Wh. Adaptiv wählt die Einheit je Wert: Watt unter einem Kilowatt, Kilowatt darüber.",
     energyUnit: "Energieeinheit",
     energyUnitHelp:
       "Einheit für alle Energiesummen (die Tageskurve, das Detailpanel, die Tagessummen der Zeitleiste). „Automatisch“ folgt der Leistungseinheit oben; wählen Sie Wh oder kWh, um sie unabhängig festzulegen.",
     energyUnitAuto: "Automatisch",
+    unitAdaptive: "Adaptiv",
     irradianceUnit: "Einheit der Solarkonstante",
     irradianceUnitHelp:
       "Einheit für die Anzeige der Solarkonstante (Bestrahlungsstärke) über der Sonne.",

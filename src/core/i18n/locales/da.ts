@@ -108,11 +108,12 @@ export const da: Translations = {
       "Antal decimaler vist på hver værdiaflæsning, så chipsene fremstår ensartede. Gælder kW-værdier (hele watt forbliver heltal) og kWh. 0 til 3, standard 1.",
     powerUnit: "Effektenhed",
     powerUnitHelp:
-      "Enhed for hver effektaflæsning på kortet (chips, grafværktøjstips). Energi følger den også, så kortet forbliver konsistent: kW parres med kWh, W med Wh.",
+      "Enhed for hver effektaflæsning på kortet (chips, grafværktøjstips). Energi følger den også, så kortet forbliver konsistent: kW parres med kWh, W med Wh. Adaptiv vælger enhed pr. værdi: watt under en kilowatt, kilowatt derover.",
     energyUnit: "Energienhed",
     energyUnitHelp:
       "Enhed for alle energitotaler (dagskurven, detaljepanelet, dagstotalerne på tidslinjen). Auto følger effektenheden ovenfor; vælg Wh eller kWh for at indstille den selvstændigt.",
     energyUnitAuto: "Auto",
+    unitAdaptive: "Adaptiv",
     irradianceUnit: "Enhed for solkonstant",
     irradianceUnitHelp:
       "Enhed for aflæsningen af solkonstanten (irradians) over solen.",

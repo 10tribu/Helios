@@ -9,6 +9,25 @@ and the project follows a date-based versioning scheme (`YEAR.MONTH.PATCH`).
 
 ## 2026.9.5
 
+### Added: an adaptive power and energy unit
+
+The unit was a single global choice, and a house is not global. A heat pump sits in kilowatts, a
+dryer swings between two kilowatts while it heats and eighty watts while it holds temperature, and
+neither setting served both: in `kW` those eighty watts printed as "0 kW", and in `W` the heat pump
+printed five digits everywhere. `power-unit` and `energy-unit` gain a third choice, `adaptive`, which
+is a rule rather than a unit: each value is printed in watts below a kilowatt and in kilowatts above,
+energy likewise at a kilowatt-hour. Nothing to configure, and an `adaptive` power unit carries into
+an `auto` energy unit, so the rule is chosen once.
+
+### Fixed: a neighbour's house drawn as the home when the map has none
+
+The nearest footprint was marked as home with no distance test. A house OpenStreetMap does not hold
+left the nearest neighbour first in the distance-sorted list, and it was drawn as the home at full
+opacity, off-centre against a sun arc and a HUD that were centred correctly. Past twenty-five metres
+the home is now a generic house at the centre and the real footprints stay neighbours, so the street
+still reads true and only the building the map is missing is the one standing in. The editor's
+configuration panel gains a line saying so, rather than leaving a plain box to speak for itself.
+
 ### Changed: the editor says whether a forecast is actually attached
 
 The configuration panel at the top of the editor checked the live power sensor of every family and

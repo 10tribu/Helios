@@ -108,11 +108,12 @@ export const hu: Translations = {
       "Az egyes értékeknél megjelenített tizedesjegyek száma, hogy a chipek egységesek maradjanak. A kW értékekre vonatkozik (az egész wattok egész számok maradnak) és a kWh-ra is. 0-tól 3-ig, alapértelmezett 1.",
     powerUnit: "Teljesítmény mértékegysége",
     powerUnitHelp:
-      "A kártya minden teljesítménykijelzésének mértékegysége (chipek, grafikon buboréksúgók). Az energia is ezt követi, így a kártya következetes marad: a kW a kWh-val, a W a Wh-val párosul.",
+      "A kártya minden teljesítménykijelzésének mértékegysége (chipek, grafikon buboréksúgók). Az energia is ezt követi, így a kártya következetes marad: a kW a kWh-val, a W a Wh-val párosul. Az adaptív értékenként választ mértékegységet: watt egy kilowatt alatt, kilowatt fölötte.",
     energyUnit: "Energia mértékegysége",
     energyUnitHelp:
       "Mértékegység minden energiaösszeghez (napi görbe, részletek panel, az idővonal napi összegei). Az Automatikus a fenti teljesítmény mértékegységét követi; válasszon Wh-t vagy kWh-t a különálló beállításhoz.",
     energyUnitAuto: "Automatikus",
+    unitAdaptive: "Adaptív",
     irradianceUnit: "Napállandó mértékegysége",
     irradianceUnitHelp:
       "A nap fölött megjelenő napállandó (besugárzás) kijelzésének mértékegysége.",

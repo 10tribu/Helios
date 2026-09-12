@@ -13,6 +13,7 @@ import {
     SCENE_ZOOM_LEVELS, DEFAULT_SCENE_ZOOM,
 } from './constants';
 import { clamp } from '../render-kit/math';
+import type { PowerUnit, EnergyUnit } from '../format/format';
 
 export {
     DEFAULT_BUILDING_OPACITY,
@@ -134,8 +135,9 @@ export interface HeliosConfig
     'cache-id'?:                unknown;
     //Power readout unit for the whole card: 'W' or 'kW'. Default 'kW'. Energy totals follow it by default
     //('energy-unit' absent or 'auto'), unless 'energy-unit' is set on its own.
+    //'adaptive' leaves the choice to each value: watts below a kilowatt, kilowatts above.
     'power-unit'?:             unknown;
-    //Energy total unit: 'auto' (follow power-unit, the default), 'Wh' or 'kWh'.
+    //Energy total unit: 'auto' (follow power-unit, the default), 'Wh', 'kWh' or 'adaptive'.
     'energy-unit'?:            unknown;
     //Irradiance (solar constant) readout unit: 'W/m²', 'kW/m²' or 'W/ft²'. Default 'W/m²'.
     'irradiance-unit'?:        unknown;
@@ -230,16 +232,27 @@ export function maxExpectedPowerW(config: HeliosConfig | undefined): number
 }
 
 
-//Resolved power readout unit ('W' or 'kW') for every power value on the card. Default 'kW'.
-export function powerUnit(config: HeliosConfig | undefined): 'W' | 'kW'
+//Resolved power readout unit for every power value on the card. Default 'kW'. 'adaptive' is not a unit but a
+//rule: the formatter picks watts or kilowatts from the value itself, so a device that swings between two
+//kilowatts and eighty watts reads right at both ends instead of printing one of them as zero.
+export function powerUnit(config: HeliosConfig | undefined): PowerUnit
 {
-    return config?.['power-unit'] === 'W' ? 'W' : 'kW';
+    const raw = config?.['power-unit'];
+    if (raw === 'W')
+    {
+        return 'W';
+    }
+    if (raw === 'adaptive')
+    {
+        return 'adaptive';
+    }
+    return 'kW';
 }
 
 
-//Resolved energy total unit ('Wh' or 'kWh'). Explicit 'energy-unit' wins; absent or 'auto' mirrors powerUnit
-//(kW -> kWh, W -> Wh).
-export function energyUnit(config: HeliosConfig | undefined): 'Wh' | 'kWh'
+//Resolved energy total unit. Explicit 'energy-unit' wins; absent or 'auto' mirrors powerUnit (kW -> kWh,
+//W -> Wh, adaptive -> adaptive), so choosing the rule once applies it to both families.
+export function energyUnit(config: HeliosConfig | undefined): EnergyUnit
 {
     const raw = config?.['energy-unit'];
     if (raw === 'Wh')
@@ -250,7 +263,16 @@ export function energyUnit(config: HeliosConfig | undefined): 'Wh' | 'kWh'
     {
         return 'kWh';
     }
-    return powerUnit(config) === 'W' ? 'Wh' : 'kWh';
+    if (raw === 'adaptive')
+    {
+        return 'adaptive';
+    }
+    const power = powerUnit(config);
+    if (power === 'adaptive')
+    {
+        return 'adaptive';
+    }
+    return power === 'W' ? 'Wh' : 'kWh';
 }
 
 

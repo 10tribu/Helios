@@ -1374,10 +1374,12 @@ export class HeliosCardEditor extends LitElement
                 ${this._renderSlider('max-expected-power', t.editor.maxExpectedPower, MIN_MAX_EXPECTED_POWER_W, MAX_MAX_EXPECTED_POWER_W, 500, DEFAULT_MAX_EXPECTED_POWER_W, ' W')}
                 <div class="field-help">${t.editor.maxExpectedPowerHelp}</div>
                 ${this._renderSelect('power-unit', t.editor.powerUnit,
-        [{ value: 'kW', label: 'kW' }, { value: 'W', label: 'W' }], 'kW',
+        [{ value: 'kW', label: 'kW' }, { value: 'W', label: 'W' },
+            { value: 'adaptive', label: t.editor.unitAdaptive }], 'kW',
         t.editor.powerUnitHelp)}
                 ${this._renderSelect('energy-unit', t.editor.energyUnit,
-        [{ value: 'auto', label: t.editor.energyUnitAuto }, { value: 'kWh', label: 'kWh' }, { value: 'Wh', label: 'Wh' }], 'auto',
+        [{ value: 'auto', label: t.editor.energyUnitAuto }, { value: 'kWh', label: 'kWh' },
+            { value: 'Wh', label: 'Wh' }, { value: 'adaptive', label: t.editor.unitAdaptive }], 'auto',
         t.editor.energyUnitHelp)}
                 ${this._renderSelect('irradiance-unit', t.editor.irradianceUnit,
         [{ value: 'W/m²', label: 'W/m²' }, { value: 'kW/m²', label: 'kW/m²' }, { value: 'W/ft²', label: 'W/ft²' }], 'W/m²',

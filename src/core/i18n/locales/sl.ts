@@ -108,11 +108,12 @@ export const sl: Translations = {
       "Število decimalnih mest, prikazanih pri vsaki vrednosti, da so čipi videti enotni. Velja za vrednosti v kW (cele vatne vrednosti ostanejo cela števila) in za kWh. 0 do 3, privzeto 1.",
     powerUnit: "Enota moči",
     powerUnitHelp:
-      "Enota za vsak prikaz moči na kartici (čipi, namigi grafa). Energija ji tudi sledi, da kartica ostane usklajena: kW se ujema s kWh, W z Wh.",
+      "Enota za vsak prikaz moči na kartici (čipi, namigi grafa). Energija ji tudi sledi, da kartica ostane usklajena: kW se ujema s kWh, W z Wh. Prilagodljiva izbere enoto za vsako vrednost: vati pod kilovatom, kilovati nad njim.",
     energyUnit: "Enota energije",
     energyUnitHelp:
       "Enota za vse skupne vrednosti energije (dnevna krivulja, podrobnostni pladenj, dnevni seštevki na časovnici). Samodejno sledi zgornji enoti moči; izberite Wh ali kWh za ločeno nastavitev.",
     energyUnitAuto: "Samodejno",
+    unitAdaptive: "Prilagodljiva",
     irradianceUnit: "Enota sončne konstante",
     irradianceUnitHelp:
       "Enota za prikaz sončne konstante (obsevanja) nad soncem.",

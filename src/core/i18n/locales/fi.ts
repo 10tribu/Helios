@@ -108,11 +108,12 @@ export const fi: Translations = {
       "Jokaisessa arvolukemassa näytettävien desimaalien määrä, jotta sirut näkyvät yhtenäisinä. Koskee kW-arvoja (kokonaiset watit pysyvät kokonaislukuina) ja kWh-arvoja. 0-3, oletus 1.",
     powerUnit: "Tehon yksikkö",
     powerUnitHelp:
-      "Yksikkö jokaiselle kortin teholukemalle (sirut, kaavion työkaluvihjeet). Energia noudattaa sitä myös, joten kortti pysyy yhtenäisenä: kW yhdistyy kWh:hon, W Wh:hon.",
+      "Yksikkö jokaiselle kortin teholukemalle (sirut, kaavion työkaluvihjeet). Energia noudattaa sitä myös, joten kortti pysyy yhtenäisenä: kW yhdistyy kWh:hon, W Wh:hon. Mukautuva valitsee yksikön arvokohtaisesti: watteja alle kilowatin, kilowatteja sen yli.",
     energyUnit: "Energiayksikkö",
     energyUnitHelp:
       "Yksikkö kaikille energian summille (päiväkäyrä, tietopaneeli, aikajanan päiväsummat). Automaattinen noudattaa yllä olevaa tehon yksikköä; valitse Wh tai kWh asettaaksesi sen erikseen.",
     energyUnitAuto: "Automaattinen",
+    unitAdaptive: "Mukautuva",
     irradianceUnit: "Aurinkovakion yksikkö",
     irradianceUnitHelp:
       "Yksikkö auringon yläpuolella olevalle aurinkovakion (irradianssin) lukemalle.",

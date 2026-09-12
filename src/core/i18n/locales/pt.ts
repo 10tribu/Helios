@@ -108,11 +108,12 @@ export const pt: Translations = {
       "Número de decimais mostrado em cada leitura de valor, para que os chips fiquem uniformes. Aplica-se aos valores em kW (os watts inteiros mantêm-se sem decimais) e aos kWh. De 0 a 3, predefinição 1.",
     powerUnit: "Unidade de potência",
     powerUnitHelp:
-      "Unidade para cada leitura de potência no cartão (chips, dicas do gráfico). A energia também a segue, para que o cartão se mantenha consistente: kW combina com kWh, W com Wh.",
+      "Unidade para cada leitura de potência no cartão (chips, dicas do gráfico). A energia também a segue, para que o cartão se mantenha consistente: kW combina com kWh, W com Wh. Adaptativa escolhe a unidade valor a valor: watts abaixo de um quilowatt, quilowatts acima.",
     energyUnit: "Unidade de energia",
     energyUnitHelp:
       "Unidade para cada total de energia (a curva do dia, o painel de detalhes, os totais diários da linha do tempo). Automático segue a unidade de potência acima; escolha Wh ou kWh para defini-la separadamente.",
     energyUnitAuto: "Automático",
+    unitAdaptive: "Adaptativa",
     irradianceUnit: "Unidade da constante solar",
     irradianceUnitHelp:
       "Unidade para a leitura da constante solar (irradiância) acima do sol.",

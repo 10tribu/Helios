@@ -108,11 +108,12 @@ export const pl: Translations = {
       "Liczba miejsc dziesiętnych pokazywanych przy każdej wartości, aby chipy wyglądały jednolicie. Dotyczy wartości w kW (pełne waty pozostają liczbami całkowitymi) oraz kWh. Od 0 do 3, domyślnie 1.",
     powerUnit: "Jednostka mocy",
     powerUnitHelp:
-      "Jednostka dla każdego odczytu mocy na karcie (chipy, dymki wykresu). Energia też za nią podąża, aby karta pozostała spójna: kW łączy się z kWh, W z Wh.",
+      "Jednostka dla każdego odczytu mocy na karcie (chipy, dymki wykresu). Energia też za nią podąża, aby karta pozostała spójna: kW łączy się z kWh, W z Wh. Adaptacyjna dobiera jednostkę do każdej wartości: waty poniżej kilowata, kilowaty powyżej.",
     energyUnit: "Jednostka energii",
     energyUnitHelp:
       "Jednostka dla wszystkich sum energii (krzywa dnia, panel szczegółów, dzienne sumy na osi czasu). Automatyczna podąża za jednostką mocy powyżej; wybierz Wh lub kWh, aby ustawić ją niezależnie.",
     energyUnitAuto: "Automatyczna",
+    unitAdaptive: "Adaptacyjna",
     irradianceUnit: "Jednostka stałej słonecznej",
     irradianceUnitHelp:
       "Jednostka odczytu stałej słonecznej (nasłonecznienia) nad słońcem.",

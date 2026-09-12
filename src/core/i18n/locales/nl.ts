@@ -108,11 +108,12 @@ export const nl: Translations = {
       "Aantal decimalen dat bij elke waardeweergave wordt getoond, zodat de chips uniform ogen. Geldt voor kW-waarden (hele watt blijven gehele getallen) en voor kWh. 0 tot 3, standaard 1.",
     powerUnit: "Vermogenseenheid",
     powerUnitHelp:
-      "Eenheid voor elke vermogensweergave op de kaart (chips, grafiektooltips). Energie volgt deze ook, zodat de kaart consistent blijft: kW hoort bij kWh, W bij Wh.",
+      "Eenheid voor elke vermogensweergave op de kaart (chips, grafiektooltips). Energie volgt deze ook, zodat de kaart consistent blijft: kW hoort bij kWh, W bij Wh. Adaptief kiest de eenheid per waarde: watt onder een kilowatt, kilowatt daarboven.",
     energyUnit: "Energie-eenheid",
     energyUnitHelp:
       "Eenheid voor elk energietotaal (de dagcurve, het detailpaneel, de dagtotalen van de tijdlijn). Automatisch volgt de vermogenseenheid hierboven; kies Wh of kWh om deze apart in te stellen.",
     energyUnitAuto: "Automatisch",
+    unitAdaptive: "Adaptief",
     irradianceUnit: "Eenheid van de zonneconstante",
     irradianceUnitHelp:
       "Eenheid voor de weergave van de zonneconstante (instraling) boven de zon.",

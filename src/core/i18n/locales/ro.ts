@@ -108,11 +108,12 @@ export const ro: Translations = {
       "Numarul de zecimale afisate la fiecare valoare, astfel incat cipurile sa arate uniform. Se aplica valorilor in kW (watii intregi raman intregi) si celor in kWh. De la 0 la 3, implicit 1.",
     powerUnit: "Unitate de putere",
     powerUnitHelp:
-      "Unitatea pentru fiecare citire a puterii de pe card (cipuri, indicii graficului). Energia o urmeaza si ea, astfel incat cardul ramane consecvent: kW se imperecheaza cu kWh, W cu Wh.",
+      "Unitatea pentru fiecare citire a puterii de pe card (cipuri, indicii graficului). Energia o urmeaza si ea, astfel incat cardul ramane consecvent: kW se imperecheaza cu kWh, W cu Wh. Adaptivă alege unitatea pentru fiecare valoare: wați sub un kilowatt, kilowați peste.",
     energyUnit: "Unitate de energie",
     energyUnitHelp:
       "Unitate pentru fiecare total de energie (curba zilei, panoul de detalii, totalurile zilnice din cronologie). Automat urmează unitatea de putere de mai sus; alegeți Wh sau kWh pentru a o seta separat.",
     energyUnitAuto: "Automat",
+    unitAdaptive: "Adaptivă",
     irradianceUnit: "Unitatea constantei solare",
     irradianceUnitHelp:
       "Unitatea pentru citirea constantei solare (iradiere) de deasupra soarelui.",
