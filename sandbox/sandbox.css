@@ -564,3 +564,14 @@ input:checked + .sb-slider-switch:before {
     border-radius: inherit;
     z-index: 2;
 }
+
+/* Satellite Ground Canvas */
+.satellite-ground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    will-change: transform;
+}
+

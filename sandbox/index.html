@@ -186,6 +186,102 @@
                         </div>
                     </div>
 
+                    <!-- Vue Satellite -->
+                    <div class="sb-section">
+                        <div class="sb-section-title">
+                            <span>
+                                <svg class="sb-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                                <span>🛰️ Vue Satellite & Hybride</span>
+                            </span>
+                        </div>
+
+                        <div class="sb-field-row">
+                            <span class="sb-label">Activer la vue satellite</span>
+                            <label class="sb-switch">
+                                <input type="checkbox" id="cfg-satellite-enabled">
+                                <span class="sb-slider-switch"></span>
+                            </label>
+                        </div>
+
+                        <div id="satellite-controls-container" style="display: none;">
+                            <div class="sb-field">
+                                <label class="sb-label">Mode d'affichage</label>
+                                <select class="sb-select" id="cfg-satellite-mode">
+                                    <option value="hybrid">Hybride (Satellite + Routes/Limites)</option>
+                                    <option value="pure">Satellite pur (Photo seule)</option>
+                                </select>
+                            </div>
+
+                            <div class="sb-field">
+                                <div class="sb-field-row">
+                                    <span class="sb-label">Opacité satellite</span>
+                                    <span class="sb-value-badge"><span id="val-cfg-satellite-opacity">100</span>%</span>
+                                </div>
+                                <input type="range" class="sb-range" id="cfg-satellite-opacity" min="10" max="100" step="5" value="100">
+                            </div>
+
+                            <div class="sb-field">
+                                <div class="sb-field-row">
+                                    <span class="sb-label">Opacité routes OSM (en hybride)</span>
+                                    <span class="sb-value-badge"><span id="val-cfg-vector-opacity">60</span>%</span>
+                                </div>
+                                <input type="range" class="sb-range" id="cfg-vector-opacity" min="0" max="100" step="5" value="60">
+                            </div>
+
+                            <div class="sb-field">
+                                <label class="sb-label">Niveau de zoom / Résolution</label>
+                                <select class="sb-select" id="cfg-satellite-zoom">
+                                    <option value="17">Zoom 17 (Vue large quartier)</option>
+                                    <option value="18" selected>Zoom 18 (Détaillé - Recommandé)</option>
+                                    <option value="19">Zoom 19 (Ultra haute résolution)</option>
+                                </select>
+                            </div>
+
+                            <div class="sb-field">
+                                <div class="sb-field-row">
+                                    <span class="sb-label">Opacité toits 3D (Voir toits réels)</span>
+                                    <span class="sb-value-badge"><span id="val-cfg-roof-opacity">100</span>%</span>
+                                </div>
+                                <input type="range" class="sb-range" id="cfg-roof-opacity" min="0" max="100" step="5" value="100">
+                            </div>
+
+                            <!-- Translation / Calibrage X & Y -->
+                            <div class="sb-field" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--sb-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span class="sb-label" style="font-weight: 600; color: var(--sb-accent); display: flex; align-items: center; gap: 5px;">
+                                        <svg class="sb-icon" viewBox="0 0 24 24"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+                                        <span>Calibrage position (X / Y)</span>
+                                    </span>
+                                    <button class="sb-btn" id="btn-reset-sat-offset" style="font-size: 11px; padding: 2px 8px; height: 22px;" title="Remettre les décalages à 0m">0m</button>
+                                </div>
+
+                                <div class="sb-field">
+                                    <div class="sb-field-row">
+                                        <span class="sb-label">Translation X (Ouest ← → Est)</span>
+                                        <span class="sb-value-badge"><span id="val-cfg-satellite-offset-x">0.0</span> m</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <button class="sb-btn" id="btn-sat-x-minus" style="padding: 2px 6px; font-size: 11px; height: 24px;" title="Déplacer vers l'Ouest (-0.5m)">-0.5m</button>
+                                        <input type="range" class="sb-range" id="cfg-satellite-offset-x" min="-30" max="30" step="0.2" value="0" style="flex: 1;">
+                                        <button class="sb-btn" id="btn-sat-x-plus" style="padding: 2px 6px; font-size: 11px; height: 24px;" title="Déplacer vers l'Est (+0.5m)">+0.5m</button>
+                                    </div>
+                                </div>
+
+                                <div class="sb-field" style="margin-top: 8px;">
+                                    <div class="sb-field-row">
+                                        <span class="sb-label">Translation Y (Sud ↓ ↑ Nord)</span>
+                                        <span class="sb-value-badge"><span id="val-cfg-satellite-offset-y">0.0</span> m</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <button class="sb-btn" id="btn-sat-y-minus" style="padding: 2px 6px; font-size: 11px; height: 24px;" title="Déplacer vers le Sud (-0.5m)">-0.5m</button>
+                                        <input type="range" class="sb-range" id="cfg-satellite-offset-y" min="-30" max="30" step="0.2" value="0" style="flex: 1;">
+                                        <button class="sb-btn" id="btn-sat-y-plus" style="padding: 2px 6px; font-size: 11px; height: 24px;" title="Déplacer vers le Nord (+0.5m)">+0.5m</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Display & Camera -->
                     <div class="sb-section">
                         <div class="sb-section-title">

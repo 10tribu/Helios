@@ -1,8 +1,12 @@
 import '../src/helios-card';
 import { HeliosCard } from '../src/helios-card';
 import { HeliosEngine } from '../src/scene/helios-engine';
+import { SceneRenderer } from '../src/scene/renderer';
 import { MockHassManager, defaultSandboxConfig, type SandboxSimState } from './mock-hass';
 import type { HeliosConfig } from '../src/core/config/helios-config';
+import { loadSatelliteGround, clearSatelliteTileCache, type SatelliteGroundLevel } from './satellite-loader';
+import { pxPerMetreFor } from '../src/scene/tiles';
+import type { GroundStyle, GroundLayerKey } from '../src/scene/ground-render';
 
 const STORAGE_KEY_CONFIG = 'helios_sandbox_config';
 const STORAGE_KEY_SIM = 'helios_sandbox_sim';
@@ -74,6 +78,91 @@ HeliosEngine.prototype.updateConfig = function (cfg: HeliosConfig): void {
     }
 };
 
+// ── Patch _groundStyle: in satellite hybrid mode, hide solid ground fills so satellite shows through ──
+const _origGroundStyle = (HeliosEngine.prototype as any)._groundStyle;
+(HeliosEngine.prototype as any)._groundStyle = function (): GroundStyle {
+    const baseStyle = _origGroundStyle.call(this);
+    const app = (window as any).__helios_sandbox_app as any;
+
+    if (app?._satelliteEnabled && app?._satelliteMode === 'hybrid') {
+        const hidden = new Set<GroundLayerKey>(baseStyle.hidden);
+        // Hide solid terrain/polygon fills that would cover or fog the satellite imagery
+        hidden.add('land');
+        hidden.add('wood');
+        hidden.add('grass');
+        hidden.add('sand');
+        hidden.add('wetland');
+        hidden.add('ice');
+        hidden.add('landuse');
+        hidden.add('building'); // 3D buildings are rendered separately above
+        hidden.add('water');    // Real satellite water shows through naturally
+
+        const palette = { ...baseStyle.palette };
+        palette.roadMajor = '#ffffff';
+        palette.roadMinor = '#f0f0f0';
+        palette.roadCasing = 'rgba(0, 0, 0, 0.7)';
+        palette.path = '#ffe57f';
+        palette.rail = '#ff5252';
+        palette.boundary = '#e040fb';
+
+        return { palette, hidden };
+    }
+
+    return baseStyle;
+};
+
+// ── Patch SceneRenderer._draw: update satellite ground canvas 3D transform ──
+const _origRendererDraw = (SceneRenderer.prototype as any)._draw;
+(SceneRenderer.prototype as any)._draw = function (): void {
+    _origRendererDraw.call(this);
+
+    const app = (window as any).__helios_sandbox_app as any;
+    const satLevel = (window as any).__helios_sandbox_sat_level as SatelliteGroundLevel | undefined;
+    if (this._groundHolder && satLevel?.canvas) {
+        if (app?._satelliteEnabled) {
+            // Ensure satellite canvas is attached to groundHolder (under vector canvases)
+            if (satLevel.canvas.parentElement !== this._groundHolder) {
+                this._groundHolder.prepend(satLevel.canvas);
+                app?._syncSatelliteLayers?.();
+            }
+
+            const offsetX = app?._satelliteOffsetX ?? 0;
+            const offsetY = app?._satelliteOffsetY ?? 0;
+            const pxPerM = pxPerMetreFor(satLevel.lat, satLevel.zoom);
+
+            // Positive X = East (+X on canvas), Positive Y = North (-Y on canvas)
+            const effectiveHomeX = satLevel.homeX - (offsetX * pxPerM);
+            const effectiveHomeY = satLevel.homeY + (offsetY * pxPerM);
+
+            const { transform, transformOrigin } = this.camera.groundTransform(
+                effectiveHomeX,
+                effectiveHomeY,
+                satLevel.scale
+            );
+            satLevel.canvas.style.transformOrigin = transformOrigin;
+            satLevel.canvas.style.transform = transform;
+        } else {
+            if (satLevel.canvas.parentElement) {
+                satLevel.canvas.remove();
+            }
+        }
+    }
+};
+
+// ── Patch SceneRenderer.setLocation: preserve satellite canvas on location re-fetch ──
+const _origSetLocation = (SceneRenderer.prototype as any).setLocation;
+(SceneRenderer.prototype as any).setLocation = async function (
+    lat: number,
+    lon: number,
+    style: any
+): Promise<void> {
+    await _origSetLocation.call(this, lat, lon, style);
+    const app = (window as any).__helios_sandbox_app as any;
+    if (app) {
+        app.onRendererGroundReplaced();
+    }
+};
+
 // ══════════════════════════════════════════════════════════════════════════════
 
 interface SandboxUIState {
@@ -84,6 +173,14 @@ interface SandboxUIState {
     miniatureBlurEnabled: boolean;
     miniatureBlurLevel: number;
     miniatureVignetteOpacity: number;
+    satelliteEnabled?: boolean;
+    satelliteMode?: 'hybrid' | 'pure';
+    satelliteOpacity?: number;
+    vectorOpacity?: number;
+    satelliteZoom?: number;
+    roofOpacity?: number;
+    satelliteOffsetX?: number;
+    satelliteOffsetY?: number;
 }
 
 class SandboxApp {
@@ -94,10 +191,21 @@ class SandboxApp {
     private _miniatureBlurEnabled = false;
     private _miniatureBlurLevel = 10;
     private _miniatureVignetteOpacity = 50;
+    private _satelliteEnabled = false;
+    private _satelliteMode: 'hybrid' | 'pure' = 'hybrid';
+    private _satelliteOpacity = 100;
+    private _vectorOpacity = 60;
+    private _satelliteZoom = 18;
+    private _roofOpacity = 100;
+    private _satelliteOffsetX = 0;
+    private _satelliteOffsetY = 0;
+    private _currentSatLevel: SatelliteGroundLevel | null = null;
+    private _satAbortController: AbortController | null = null;
     private _activeTab = 'config';
     private _activeViewport = 'desktop';
 
     public init(): void {
+        (window as any).__helios_sandbox_app = this;
         this._cardElement = document.querySelector('helios-card') as HeliosCard;
         if (!this._cardElement) {
             console.error('Helios card element not found in DOM');
@@ -126,6 +234,8 @@ class SandboxApp {
         this._syncYamlUI();
         this._syncMiniatureVignette();
         this._syncShadowDOMOverrides();
+        this._syncRoofOpacity();
+        this._syncSatelliteGround();
     }
 
     private _loadSavedState(): void {
@@ -170,6 +280,30 @@ class SandboxApp {
                 if (typeof ui.miniatureVignetteOpacity === 'number') {
                     this._miniatureVignetteOpacity = ui.miniatureVignetteOpacity;
                 }
+                if (typeof ui.satelliteEnabled === 'boolean') {
+                    this._satelliteEnabled = ui.satelliteEnabled;
+                }
+                if (ui.satelliteMode === 'pure' || ui.satelliteMode === 'hybrid') {
+                    this._satelliteMode = ui.satelliteMode;
+                }
+                if (typeof ui.satelliteOpacity === 'number') {
+                    this._satelliteOpacity = ui.satelliteOpacity;
+                }
+                if (typeof ui.vectorOpacity === 'number') {
+                    this._vectorOpacity = ui.vectorOpacity;
+                }
+                if (typeof ui.satelliteZoom === 'number') {
+                    this._satelliteZoom = ui.satelliteZoom;
+                }
+                if (typeof ui.roofOpacity === 'number') {
+                    this._roofOpacity = ui.roofOpacity;
+                }
+                if (typeof ui.satelliteOffsetX === 'number') {
+                    this._satelliteOffsetX = ui.satelliteOffsetX;
+                }
+                if (typeof ui.satelliteOffsetY === 'number') {
+                    this._satelliteOffsetY = ui.satelliteOffsetY;
+                }
                 if (ui.activeTab) {
                     this._activeTab = ui.activeTab;
                 }
@@ -208,6 +342,14 @@ class SandboxApp {
                 miniatureBlurEnabled: this._miniatureBlurEnabled,
                 miniatureBlurLevel: this._miniatureBlurLevel,
                 miniatureVignetteOpacity: this._miniatureVignetteOpacity,
+                satelliteEnabled: this._satelliteEnabled,
+                satelliteMode: this._satelliteMode,
+                satelliteOpacity: this._satelliteOpacity,
+                vectorOpacity: this._vectorOpacity,
+                satelliteZoom: this._satelliteZoom,
+                roofOpacity: this._roofOpacity,
+                satelliteOffsetX: this._satelliteOffsetX,
+                satelliteOffsetY: this._satelliteOffsetY,
             };
             localStorage.setItem(STORAGE_KEY_UI, JSON.stringify(uiState));
         } catch (e) {
@@ -340,6 +482,14 @@ class SandboxApp {
             shadow.appendChild(overrideStyle);
         }
         overrideStyle.textContent = `
+            /* Fix ha-card in standalone sandbox environment (HA natively defines ha-card as display: block) */
+            ha-card {
+                display: block !important;
+                height: 100% !important;
+                width: 100% !important;
+                overflow: hidden !important;
+            }
+
             /* battery-above-arc: elevate energy pills/chips above the solar arc (z 11) and sun disc (z 12). */
             ha-card.battery-above-arc .pv-pct-label,
             ha-card.battery-above-arc .battery-pct-label,
@@ -391,6 +541,207 @@ class SandboxApp {
         this._syncYamlUI();
         this._syncMiniatureVignette();
         this._syncShadowDOMOverrides();
+        this._syncRoofOpacity();
+        this._syncSatelliteGround();
+    }
+
+    public onRendererGroundReplaced(): void {
+        if (!this._satelliteEnabled || !this._currentSatLevel) return;
+        const engine = (this._cardElement as any)?._engine as HeliosEngine | undefined;
+        const renderer = (engine as any)?._renderer as any;
+        if (!renderer?._groundHolder) return;
+
+        if (this._currentSatLevel.canvas.parentElement !== renderer._groundHolder) {
+            renderer._groundHolder.prepend(this._currentSatLevel.canvas);
+        }
+        (window as any).__helios_sandbox_sat_level = this._currentSatLevel;
+        this._syncSatelliteLayers();
+        this._updateSatelliteTransform();
+    }
+
+    private _syncRoofOpacity(): void {
+        if (!this._cardElement) return;
+        const shadow = this._cardElement.shadowRoot;
+        if (!shadow) {
+            requestAnimationFrame(() => this._syncRoofOpacity());
+            return;
+        }
+
+        let roofStyle = shadow.getElementById('sandbox-roof-opacity-style') as HTMLStyleElement | null;
+        if (!roofStyle) {
+            roofStyle = document.createElement('style');
+            roofStyle.id = 'sandbox-roof-opacity-style';
+            shadow.appendChild(roofStyle);
+        }
+
+        const op = Math.max(0, Math.min(1, this._roofOpacity / 100));
+        roofStyle.textContent = `
+            .scene-buildings {
+                opacity: ${op.toFixed(2)};
+                transition: opacity 0.15s ease;
+            }
+        `;
+    }
+
+    private async _syncSatelliteGround(forceReload = false): Promise<void> {
+        if (!this._cardElement) return;
+        const engine = (this._cardElement as any)?._engine as HeliosEngine | undefined;
+        const renderer = (engine as any)?._renderer as any;
+        if (!renderer || !renderer._groundHolder) {
+            requestAnimationFrame(() => this._syncSatelliteGround(forceReload));
+            return;
+        }
+
+        if (!this._satelliteEnabled) {
+            if (this._currentSatLevel?.canvas.parentElement) {
+                this._currentSatLevel.canvas.remove();
+            }
+            this._currentSatLevel = null;
+            (window as any).__helios_sandbox_sat_level = undefined;
+            this._restoreVectorGround(renderer);
+            renderer.scheduleRedraw();
+            return;
+        }
+
+        const lat = Number(this._config['home-latitude'] ?? 48.8566);
+        const lon = Number(this._config['home-longitude'] ?? 2.3522);
+        const radiusM = Number(this._config['display-radius'] ?? 200);
+        const zoom = this._satelliteZoom;
+
+        // Reuse existing level if coordinates and zoom did not change
+        if (
+            !forceReload &&
+            this._currentSatLevel &&
+            this._currentSatLevel.lat === lat &&
+            this._currentSatLevel.lon === lon &&
+            this._currentSatLevel.radiusM === radiusM &&
+            this._currentSatLevel.zoom === zoom
+        ) {
+            if (this._currentSatLevel.canvas.parentElement !== renderer._groundHolder) {
+                renderer._groundHolder.prepend(this._currentSatLevel.canvas);
+            }
+            (window as any).__helios_sandbox_sat_level = this._currentSatLevel;
+            this._syncSatelliteLayers();
+            this._updateSatelliteTransform();
+            return;
+        }
+
+        // Cancel running load
+        this._satAbortController?.abort();
+        this._satAbortController = new AbortController();
+        const signal = this._satAbortController.signal;
+
+        if (this._currentSatLevel?.canvas.parentElement) {
+            this._currentSatLevel.canvas.remove();
+        }
+
+        const satLevel = await loadSatelliteGround(lat, lon, radiusM, {
+            zoom,
+            signal,
+            onTileLoaded: () => {
+                renderer.scheduleRedraw();
+            },
+        });
+
+        if (signal.aborted || !satLevel) {
+            return;
+        }
+
+        this._currentSatLevel = satLevel;
+        (window as any).__helios_sandbox_sat_level = satLevel;
+
+        // Prepend so satellite canvas is under vector ground canvases
+        renderer._groundHolder.prepend(satLevel.canvas);
+
+        if (renderer.camera) {
+            const pxPerM = pxPerMetreFor(satLevel.lat, satLevel.zoom);
+            const effectiveHomeX = satLevel.homeX - (this._satelliteOffsetX * pxPerM);
+            const effectiveHomeY = satLevel.homeY + (this._satelliteOffsetY * pxPerM);
+            const { transform, transformOrigin } = renderer.camera.groundTransform(
+                effectiveHomeX,
+                effectiveHomeY,
+                satLevel.scale
+            );
+            satLevel.canvas.style.transformOrigin = transformOrigin;
+            satLevel.canvas.style.transform = transform;
+        }
+
+        this._syncSatelliteLayers();
+        renderer.scheduleRedraw();
+    }
+
+    private _syncSatelliteLayers(): void {
+        if (!this._cardElement) return;
+        const engine = (this._cardElement as any)?._engine as HeliosEngine | undefined;
+        const renderer = (engine as any)?._renderer as any;
+        if (!renderer?._groundHolder) return;
+
+        const satCanvas =
+            this._currentSatLevel?.canvas ??
+            (renderer._groundHolder as HTMLElement).querySelector('.satellite-ground');
+        if (satCanvas) {
+            satCanvas.style.opacity = (this._satelliteOpacity / 100).toFixed(2);
+            satCanvas.style.display = this._satelliteEnabled ? '' : 'none';
+        }
+
+        // Repaint vector ground canvases with appropriate layer visibility
+        if (engine && renderer?.setGroundStyle && (engine as any)._groundStyle) {
+            renderer.setGroundStyle((engine as any)._groundStyle());
+        }
+
+        const vectorCanvases = renderer._groundHolder.querySelectorAll('.ground:not(.satellite-ground)');
+        vectorCanvases.forEach((c: HTMLCanvasElement) => {
+            if (!this._satelliteEnabled) {
+                c.style.display = '';
+                c.style.opacity = '';
+            } else if (this._satelliteMode === 'pure') {
+                c.style.display = 'none';
+            } else {
+                c.style.display = '';
+                c.style.opacity = (this._vectorOpacity / 100).toFixed(2);
+            }
+        });
+    }
+
+    private _restoreVectorGround(renderer: any): void {
+        if (!renderer?._groundHolder) return;
+        const engine = (this._cardElement as any)?._engine as HeliosEngine | undefined;
+        if (engine && renderer?.setGroundStyle && (engine as any)._groundStyle) {
+            renderer.setGroundStyle((engine as any)._groundStyle());
+        }
+        const vectorCanvases = renderer._groundHolder.querySelectorAll('.ground:not(.satellite-ground)');
+        vectorCanvases.forEach((c: HTMLCanvasElement) => {
+            c.style.display = '';
+            c.style.opacity = '';
+        });
+    }
+
+    private _updateSatelliteTransform(): void {
+        if (!this._cardElement) return;
+        const engine = (this._cardElement as any)?._engine as HeliosEngine | undefined;
+        const renderer = (engine as any)?._renderer as any;
+        if (!renderer) return;
+
+        const satCanvas =
+            this._currentSatLevel?.canvas ??
+            (renderer._groundHolder as HTMLElement)?.querySelector<HTMLCanvasElement>('.satellite-ground');
+        const satLevel = this._currentSatLevel ?? (window as any).__helios_sandbox_sat_level;
+
+        if (satCanvas && satLevel && renderer.camera) {
+            const pxPerM = pxPerMetreFor(satLevel.lat, satLevel.zoom);
+            const effectiveHomeX = satLevel.homeX - (this._satelliteOffsetX * pxPerM);
+            const effectiveHomeY = satLevel.homeY + (this._satelliteOffsetY * pxPerM);
+
+            const { transform, transformOrigin } = renderer.camera.groundTransform(
+                effectiveHomeX,
+                effectiveHomeY,
+                satLevel.scale
+            );
+            satCanvas.style.transformOrigin = transformOrigin;
+            satCanvas.style.transform = transform;
+        }
+
+        renderer.scheduleRedraw?.();
     }
 
     private _bindUI(): void {
@@ -453,7 +804,9 @@ class SandboxApp {
 
         // Reset cache button
         document.getElementById('btn-reset-cache')?.addEventListener('click', () => {
+            clearSatelliteTileCache();
             window.dispatchEvent(new CustomEvent('helios-data-cache-reset'));
+            this._syncSatelliteGround(true);
             alert('Cache réinitialisé !');
         });
 
@@ -537,6 +890,102 @@ class SandboxApp {
             this._saveUIState();
         });
 
+        // Satellite Controls
+        const satSwitch = document.getElementById('cfg-satellite-enabled') as HTMLInputElement;
+        const satControlsContainer = document.getElementById('satellite-controls-container');
+        satSwitch?.addEventListener('change', () => {
+            this._satelliteEnabled = satSwitch.checked;
+            if (satControlsContainer) {
+                satControlsContainer.style.display = this._satelliteEnabled ? 'block' : 'none';
+            }
+            this._syncSatelliteGround(true);
+            this._saveUIState();
+        });
+
+        const satModeSelect = document.getElementById('cfg-satellite-mode') as HTMLSelectElement;
+        satModeSelect?.addEventListener('change', () => {
+            this._satelliteMode = (satModeSelect.value as 'hybrid' | 'pure') || 'hybrid';
+            this._syncSatelliteLayers();
+            this._saveUIState();
+        });
+
+        this._bindSlider('cfg-satellite-opacity', 'val-cfg-satellite-opacity', (val) => {
+            this._satelliteOpacity = val;
+            this._syncSatelliteLayers();
+            this._saveUIState();
+        });
+
+        this._bindSlider('cfg-vector-opacity', 'val-cfg-vector-opacity', (val) => {
+            this._vectorOpacity = val;
+            this._syncSatelliteLayers();
+            this._saveUIState();
+        });
+
+        const satZoomSelect = document.getElementById('cfg-satellite-zoom') as HTMLSelectElement;
+        satZoomSelect?.addEventListener('change', () => {
+            this._satelliteZoom = parseInt(satZoomSelect.value, 10) || 18;
+            this._syncSatelliteGround(true);
+            this._saveUIState();
+        });
+
+        this._bindSlider('cfg-roof-opacity', 'val-cfg-roof-opacity', (val) => {
+            this._roofOpacity = val;
+            this._syncRoofOpacity();
+            this._saveUIState();
+        });
+
+        // Satellite translation offset controls
+        const formatOffset = (val: number): string => {
+            return (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1));
+        };
+
+        const sliderX = document.getElementById('cfg-satellite-offset-x') as HTMLInputElement;
+        const valLabelX = document.getElementById('val-cfg-satellite-offset-x');
+        sliderX?.addEventListener('input', () => {
+            this._satelliteOffsetX = parseFloat(sliderX.value) || 0;
+            if (valLabelX) valLabelX.textContent = formatOffset(this._satelliteOffsetX);
+            this._updateSatelliteTransform();
+            this._saveUIState();
+        });
+
+        const sliderY = document.getElementById('cfg-satellite-offset-y') as HTMLInputElement;
+        const valLabelY = document.getElementById('val-cfg-satellite-offset-y');
+        sliderY?.addEventListener('input', () => {
+            this._satelliteOffsetY = parseFloat(sliderY.value) || 0;
+            if (valLabelY) valLabelY.textContent = formatOffset(this._satelliteOffsetY);
+            this._updateSatelliteTransform();
+            this._saveUIState();
+        });
+
+        const nudgeX = (delta: number) => {
+            if (!sliderX) return;
+            const next = Math.max(-30, Math.min(30, parseFloat(sliderX.value) + delta));
+            sliderX.value = next.toFixed(1);
+            sliderX.dispatchEvent(new Event('input'));
+        };
+        const nudgeY = (delta: number) => {
+            if (!sliderY) return;
+            const next = Math.max(-30, Math.min(30, parseFloat(sliderY.value) + delta));
+            sliderY.value = next.toFixed(1);
+            sliderY.dispatchEvent(new Event('input'));
+        };
+
+        document.getElementById('btn-sat-x-minus')?.addEventListener('click', () => nudgeX(-0.5));
+        document.getElementById('btn-sat-x-plus')?.addEventListener('click', () => nudgeX(0.5));
+        document.getElementById('btn-sat-y-minus')?.addEventListener('click', () => nudgeY(-0.5));
+        document.getElementById('btn-sat-y-plus')?.addEventListener('click', () => nudgeY(0.5));
+
+        document.getElementById('btn-reset-sat-offset')?.addEventListener('click', () => {
+            if (sliderX) {
+                sliderX.value = '0';
+                sliderX.dispatchEvent(new Event('input'));
+            }
+            if (sliderY) {
+                sliderY.value = '0';
+                sliderY.dispatchEvent(new Event('input'));
+            }
+        });
+
         this._bindConfigSlider('cfg-zoom', 'val-cfg-zoom', 'scene-zoom', (v) => parseFloat(v.toFixed(2)));
         this._bindConfigSlider('cfg-arc-zoom', 'val-cfg-arc-zoom', 'arc-zoom', (v) => parseFloat(v.toFixed(2)));
 
@@ -557,6 +1006,7 @@ class SandboxApp {
                 this._config['home-longitude'] = lon;
                 this._hassManager.updateConfig({ latitude: lat, longitude: lon });
                 this._applyConfig(this._config);
+                this._syncSatelliteGround(true);
             }
         };
         latInput?.addEventListener('change', applyCoords);
@@ -801,6 +1251,36 @@ class SandboxApp {
         }
         setSlider('cfg-miniature-blur-level', 'val-cfg-miniature-blur', this._miniatureBlurLevel);
         setSlider('cfg-miniature-vignette-opacity', 'val-cfg-miniature-vignette-opacity', this._miniatureVignetteOpacity);
+
+        // Satellite controls
+        setCheck('cfg-satellite-enabled', this._satelliteEnabled);
+        const satControlsContainer = document.getElementById('satellite-controls-container');
+        if (satControlsContainer) {
+            satControlsContainer.style.display = this._satelliteEnabled ? 'block' : 'none';
+        }
+        const satModeSelect = document.getElementById('cfg-satellite-mode') as HTMLSelectElement;
+        if (satModeSelect) satModeSelect.value = this._satelliteMode;
+
+        setSlider('cfg-satellite-opacity', 'val-cfg-satellite-opacity', this._satelliteOpacity);
+        setSlider('cfg-vector-opacity', 'val-cfg-vector-opacity', this._vectorOpacity);
+
+        const satZoomSelect = document.getElementById('cfg-satellite-zoom') as HTMLSelectElement;
+        if (satZoomSelect) satZoomSelect.value = String(this._satelliteZoom);
+
+        setSlider('cfg-roof-opacity', 'val-cfg-roof-opacity', this._roofOpacity);
+
+        const formatOffset = (val: number): string => {
+            return (val > 0 ? `+${val.toFixed(1)}` : val.toFixed(1));
+        };
+        const sliderX = document.getElementById('cfg-satellite-offset-x') as HTMLInputElement;
+        const valX = document.getElementById('val-cfg-satellite-offset-x');
+        if (sliderX) sliderX.value = String(this._satelliteOffsetX);
+        if (valX) valX.textContent = formatOffset(this._satelliteOffsetX);
+
+        const sliderY = document.getElementById('cfg-satellite-offset-y') as HTMLInputElement;
+        const valY = document.getElementById('val-cfg-satellite-offset-y');
+        if (sliderY) sliderY.value = String(this._satelliteOffsetY);
+        if (valY) valY.textContent = formatOffset(this._satelliteOffsetY);
 
         setSlider('cfg-zoom', 'val-cfg-zoom', Number(c['scene-zoom'] ?? 1));
         setSlider('cfg-arc-zoom', 'val-cfg-arc-zoom', Number(c['arc-zoom'] ?? 1));
