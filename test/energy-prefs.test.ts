@@ -231,3 +231,213 @@ describe('subscribeEnergyPrefs non-admin retry storm (#415)', () =>
         expect(host._energyPrefsUnsub).toBeDefined();
     });
 });
+
+//The Energy dashboard's power rework moved the live-power slot into a `power[]` array on each source. A
+//dashboard written that way carries nothing at the top of the source, so a reader that only looks there
+//reports "no live power sensor" while HA's own tile shows one (#440).
+describe('live power slot, every shape the core has written', () =>
+{
+    it('reads the grid sensor from the power[] array', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:              'grid',
+                flow_from:         [{ stat_energy_from: 'sensor.import' }],
+                flow_to:           [{ stat_energy_to: 'sensor.export' }],
+                power:             [{ power_config: { stat_rate: 'sensor.grid_power' }, stat_rate: 'sensor.grid_power' }],
+            }],
+        });
+        expect(out.gridStatRates).toEqual(['sensor.grid_power']);
+    });
+
+    it('still reads the older top-level and power_config shapes', () =>
+    {
+        const top = parseEnergyPrefs({ energy_sources: [{ type: 'grid', stat_rate: 'sensor.old_top' }] });
+        expect(top.gridStatRates).toEqual(['sensor.old_top']);
+
+        const cfg = parseEnergyPrefs({ energy_sources: [{ type: 'grid', power_config: { stat_rate: 'sensor.old_cfg' } }] });
+        expect(cfg.gridStatRates).toEqual(['sensor.old_cfg']);
+    });
+
+    it('does not count the same entity twice when an entry repeats it', () =>
+    {
+        //The new shape writes the entity at both levels of its own entry, which would otherwise be summed
+        //into the live grid figure twice.
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:  'grid',
+                power: [{ power_config: { stat_rate: 'sensor.grid_power' }, stat_rate: 'sensor.grid_power' }],
+            }],
+        });
+        expect(out.gridStatRates).toEqual(['sensor.grid_power']);
+    });
+
+    it('reads a battery wired in the new shape, and keeps HA discharge-positive flipped', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:              'battery',
+                stat_energy_from:  'sensor.batt_out',
+                stat_energy_to:    'sensor.batt_in',
+                power:             [{ power_config: { stat_rate: 'sensor.batt_power' } }],
+            }],
+        });
+        expect(out.batteryStatRates).toEqual(['sensor.batt_power']);
+        expect(out.batterySourcesWithoutRate).toBe(0);
+        expect(out.invertedRateEntities).toContain('sensor.batt_power');
+    });
+
+    it('reads a solar source wired in the new shape', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{ type: 'solar', stat_energy_from: 'sensor.pv', power: [{ stat_rate: 'sensor.pv_power' }] }],
+        });
+        expect(out.solarStatRates).toEqual(['sensor.pv_power']);
+    });
+});
+
+//The forecast curve is drawn per solar source, from the provider attached to it in the Energy dashboard.
+//Installing Helios Forecast is not enough, and nothing told the user so: the card simply drew no future.
+describe('forecast provider, counted per solar source', () =>
+{
+    it('counts a solar source that carries no forecast provider', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{ type: 'solar', stat_energy_from: 'sensor.pv' }],
+        });
+        expect(out.solarSources).toBe(1);
+        expect(out.solarSourcesWithoutForecast).toBe(1);
+        expect(out.solarForecastEntryIds).toEqual([]);
+    });
+
+    it('counts none missing when every source carries one', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [
+                { type: 'solar', stat_energy_from: 'sensor.pv_east', config_entry_solar_forecast: 'entry_east' },
+                { type: 'solar', stat_energy_from: 'sensor.pv_west', config_entry_solar_forecast: ['entry_west'] },
+            ],
+        });
+        expect(out.solarSources).toBe(2);
+        expect(out.solarSourcesWithoutForecast).toBe(0);
+        expect(out.solarForecastEntryIds).toEqual(['entry_east', 'entry_west']);
+    });
+
+    it('spots the half-wired dashboard, which draws half a curve', () =>
+    {
+        //Two arrays, a provider on one of them: the forecast is present but short, which reads as a bad
+        //forecast rather than a missing one. This is the case worth naming.
+        const out = parseEnergyPrefs({
+            energy_sources: [
+                { type: 'solar', stat_energy_from: 'sensor.pv_east', config_entry_solar_forecast: 'entry_east' },
+                { type: 'solar', stat_energy_from: 'sensor.pv_west' },
+            ],
+        });
+        expect(out.solarSources).toBe(2);
+        expect(out.solarSourcesWithoutForecast).toBe(1);
+    });
+
+    it('does not count the same provider twice when two sources share it', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [
+                { type: 'solar', stat_energy_from: 'sensor.a', config_entry_solar_forecast: 'one' },
+                { type: 'solar', stat_energy_from: 'sensor.b', config_entry_solar_forecast: 'one' },
+            ],
+        });
+        expect(out.solarForecastEntryIds).toEqual(['one']);
+        expect(out.solarSourcesWithoutForecast).toBe(0);
+    });
+});
+
+
+describe('live power is stated once, never summed across shapes', () =>
+{
+    //A dashboard that carries two of the shapes names the same watts twice, under two different entity ids:
+    //a signed net sensor and the from/to pair it is the sum of. Adding them reports double the power.
+    it('a grid with a net sensor and its own from/to pair reads the net sensor alone', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:         'grid',
+                flow_from:    [{ stat_energy_from: 'sensor.import_kwh' }],
+                stat_rate:    'sensor.grid_net_power',
+                power_config: { stat_rate_from: 'sensor.grid_in', stat_rate_to: 'sensor.grid_out' },
+            }],
+        });
+        expect(out.gridStatRates).toEqual(['sensor.grid_net_power']);
+    });
+
+    it('a battery with both keeps its directional pair, which is the richer reading', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:             'battery',
+                stat_energy_from: 'sensor.batt_out',
+                stat_energy_to:   'sensor.batt_in',
+                stat_rate:        'sensor.batt_net_power',
+                power_config:     { stat_rate_from: 'sensor.batt_charge', stat_rate_to: 'sensor.batt_discharge' },
+            }],
+        });
+        expect(out.batteryStatRates).toEqual(['sensor.batt_charge', 'sensor.batt_discharge']);
+        expect(out.batteryStatRates).not.toContain('sensor.batt_net_power');
+    });
+
+    it('a battery with a net sensor in power_config takes it over the top-level one', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:             'battery',
+                stat_energy_from: 'sensor.batt_out',
+                stat_energy_to:   'sensor.batt_in',
+                stat_rate:        'sensor.batt_top',
+                power_config:     { stat_rate: 'sensor.batt_cfg' },
+            }],
+        });
+        expect(out.batteryStatRates).toEqual(['sensor.batt_cfg']);
+    });
+
+    it('reads the array only when the source states nothing at its top', () =>
+    {
+        const both = parseEnergyPrefs({
+            energy_sources: [{
+                type:      'grid',
+                stat_rate: 'sensor.grid_net_power',
+                power:     [{ power_config: { stat_rate: 'sensor.grid_from_array' } }],
+            }],
+        });
+        expect(both.gridStatRates).toEqual(['sensor.grid_net_power']);
+
+        const arrayOnly = parseEnergyPrefs({
+            energy_sources: [{ type: 'grid', power: [{ power_config: { stat_rate: 'sensor.grid_from_array' } }] }],
+        });
+        expect(arrayOnly.gridStatRates).toEqual(['sensor.grid_from_array']);
+    });
+
+    it('still adds up several entries of the array, which are several meters', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:  'grid',
+                power: [
+                    { power_config: { stat_rate: 'sensor.meter_a' } },
+                    { power_config: { stat_rate: 'sensor.meter_b' } },
+                ],
+            }],
+        });
+        expect(out.gridStatRates).toEqual(['sensor.meter_a', 'sensor.meter_b']);
+    });
+
+    it('a solar source with both shapes reads one of them', () =>
+    {
+        const out = parseEnergyPrefs({
+            energy_sources: [{
+                type:             'solar',
+                stat_energy_from: 'sensor.pv_kwh',
+                stat_rate:        'sensor.pv_power',
+                power_config:     { stat_rate: 'sensor.pv_power_again' },
+            }],
+        });
+        expect(out.solarStatRates).toEqual(['sensor.pv_power']);
+    });
+});

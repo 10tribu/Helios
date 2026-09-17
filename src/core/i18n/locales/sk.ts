@@ -108,11 +108,12 @@ export const sk: Translations = {
       "Počet desatinných miest zobrazených pri každej hodnote, aby čipy pôsobili jednotne. Platí pre hodnoty v kW (celé watty zostávajú celé čísla) a pre kWh. 0 až 3, predvolené 1.",
     powerUnit: "Jednotka výkonu",
     powerUnitHelp:
-      "Jednotka pre každé zobrazenie výkonu na karte (čipy, popisy grafu). Energia ju tiež nasleduje, aby karta zostala konzistentná: kW sa páruje s kWh, W s Wh.",
+      "Jednotka pre každé zobrazenie výkonu na karte (čipy, popisy grafu). Energia ju tiež nasleduje, aby karta zostala konzistentná: kW sa páruje s kWh, W s Wh. Adaptívna volí jednotku podľa hodnoty: watty pod kilowattom, kilowatty nad ním.",
     energyUnit: "Jednotka energie",
     energyUnitHelp:
       "Jednotka pre všetky súčty energie (denná krivka, panel podrobností, denné súčty na časovej osi). Automaticky sleduje jednotku výkonu vyššie; zvoľte Wh alebo kWh na jej samostatné nastavenie.",
     energyUnitAuto: "Automaticky",
+    unitAdaptive: "Adaptívna",
     irradianceUnit: "Jednotka solárnej konštanty",
     irradianceUnitHelp:
       "Jednotka pre zobrazenie solárnej konštanty (ožiarenia) nad slnkom.",
@@ -189,6 +190,16 @@ export const sk: Translations = {
       "Spotreba domácnosti: zobrazená, odvodená z vyššie uvedených živých rodín.",
     liveHomeNote:
       "Spotreba domácnosti: zobrazí sa, keď každá nastavená rodina vyššie má svoj živý senzor.",
+    liveForecastOk:
+      "Predpoveď: ku každému solárnemu zdroju je pripojený poskytovateľ.",
+    liveForecastPartial:
+      "Predpoveď: pri {n} z vašich solárnych zdrojov chýba poskytovateľ, krivka teda ohlasuje menej, než vyrobíte. Pridajte tam Helios Forecast v Nastavenia > Panely > Energia > Solárne panely.",
+    liveForecastMissing:
+      "Predpoveď: solárny zdroj nemá poskytovateľa, krivka teda končí prítomnosťou. Nainštalujte Helios Forecast a pripojte ho v Nastavenia > Panely > Energia > Solárne panely.",
+    liveHouseOk:
+      "Dom: jeho obrys je na mape a scéna je naň vycentrovaná.",
+    liveHouseMissing:
+      "Dom: na vašich súradniciach nie je na mape žiadna budova, preto ho zastupuje všeobecný dom. Pridajte svoj dom do OpenStreetMap, alebo opravte bod v sekcii Umiestnenie domu.",
     openEnergyConfig: "Otvoriť nastavenie Energy",
     buildingsSection: "Domov a budovy",
     buildingsHint:

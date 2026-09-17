@@ -104,6 +104,8 @@ export interface Translations
         energyUnit:                  string;
         energyUnitHelp:              string;
         energyUnitAuto:              string;
+        //Shared by both unit selects: the unit is chosen per value rather than fixed.
+        unitAdaptive:                string;
         irradianceUnit:              string;
         irradianceUnitHelp:          string;
         //Battery-sign selector.
@@ -213,6 +215,11 @@ export interface Translations
         liveBatteryAbsent:        string;
         liveHomeOk:               string;
         liveHomeNote:             string;
+        liveForecastOk:           string;
+        liveForecastPartial:      string;
+        liveForecastMissing:      string;
+        liveHouseOk:              string;
+        liveHouseMissing:         string;
         //Deep link on a non-OK status line to Home Assistant's Energy configuration.
         openEnergyConfig:         string;
         //Surrounding buildings: cluster radius, neighbour opacity, base tint.

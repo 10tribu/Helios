@@ -5,7 +5,7 @@ import { getSunPosition, computePvPercent, computeIrradianceWm2 } from '../core/
 import { getMoonPosition, getMoonPhase } from '../core/time/moon';
 import { fetchHomePointData, clearWeatherCache, type SampleHourly } from '../data/weather';
 import { fetchRawBuildings, interpretBuildings, clearBuildingsLocationCache } from './buildings';
-import { arrayTileCorners, arrayIncidence, type ArrayLine } from './array-markers';
+import { arrayTileCorners, arrayIncidence, arrayStandHeight, type ArrayLine } from './array-markers';
 import { PERSPECTIVE, NEAR_PLANE } from './projection';
 import type { Point } from '../core/render-kit/geometry';
 import type { ArrayScene } from '../hud/hud';
@@ -367,6 +367,18 @@ export class HeliosEngine
     {
         return (this.cfg as Record<string, unknown>)['camera-locked'] === true;
     }
+    //True once a fetch has settled and the map had no footprint at the home point, so the generic box is
+    //standing in for the house. Null while nothing has settled yet, so the editor stays quiet rather than
+    //accusing the map during the loading window.
+    public homeIsPlaceholder(): boolean | null
+    {
+        if (!this._buildingsData)
+        {
+            return null;
+        }
+        return this._buildingsData.some((b) => b.isHome && b.placeholder === true);
+    }
+
     //Current camera pose (bearing/pitch in degrees), or null before the renderer exists. Used by the editor's
     //"use current view" helper to capture the framed angle into the config.
     public getCameraPose(): { bearing: number; pitch: number } | null
@@ -2218,9 +2230,12 @@ export class HeliosEngine
         //A line on the home stands on the roof of the tallest home prism, riding its rise animation, and out on the
         //slope it faces: a south array sits on the south side of the roof, which also keeps the tile from hiding
         //under the home chips pinned over the centre. The roof's reach in that direction comes from the footprint.
+        //A line with its own coordinates stands on whichever drawn building holds its point, else on the ground.
+        const buildings = this._buildingsData ?? [];
+        const heightScale = this._renderer.homeHeightScale;
         let roofM = 0;
         let homeFp: Point[] = [];
-        for (const b of this._buildingsData ?? [])
+        for (const b of buildings)
         {
             if (b.isHome && b.height > roofM)
             {
@@ -2228,7 +2243,7 @@ export class HeliosEngine
                 homeFp = b.footprint;
             }
         }
-        roofM = roofM * this._renderer.homeHeightScale + ARRAY_TILE_LIFT_M;
+        roofM = roofM * heightScale + ARRAY_TILE_LIFT_M;
         const roofReach = (fe: number, fn: number): number =>
         {
             let reach = 0;
@@ -2251,7 +2266,7 @@ export class HeliosEngine
             const fn = Math.cos(line.azimuth * DEG);
             const east   = onHome ? fe * roofReach(fe, fn) : (line.lon! - this.homeLon) * perLon;
             const north  = onHome ? fn * roofReach(fe, fn) : (line.lat! - this.homeLat) * perLat;
-            const base   = onHome ? roofM : ARRAY_TILE_LIFT_M;
+            const base   = onHome ? roofM : arrayStandHeight(east, north, buildings, heightScale, ARRAY_TILE_LIFT_M);
             const tracker = line.tracker !== null;
             const corners = arrayTileCorners(line.azimuth, line.tilt, halfW, halfL, tracker);
             const points: [number, number][] = [];

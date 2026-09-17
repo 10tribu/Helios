@@ -108,11 +108,12 @@ export const et: Translations = {
       "Igal väärtuse näidul kuvatavate kümnendkohtade arv, et kiibid näeksid ühtlased välja. Kehtib kW väärtustele (täisvatid jäävad täisarvudeks) ja kWh-le. 0 kuni 3, vaikimisi 1.",
     powerUnit: "Võimsuse ühik",
     powerUnitHelp:
-      "Ühik iga võimsuse näidu jaoks kaardil (kiibid, graafiku kohtspikrid). Energia järgib seda samuti, nii et kaart jääb ühtseks: kW sobib kWh-ga, W Wh-ga.",
+      "Ühik iga võimsuse näidu jaoks kaardil (kiibid, graafiku kohtspikrid). Energia järgib seda samuti, nii et kaart jääb ühtseks: kW sobib kWh-ga, W Wh-ga. Kohanduv valib ühiku iga väärtuse järgi: vatid alla kilovati, kilovatid üle selle.",
     energyUnit: "Energia ühik",
     energyUnitHelp:
       "Ühik kõigi energiakogusummade jaoks (päevakõver, üksikasjade paneel, ajajoone päevasummad). Automaatne järgib ülalolevat võimsuse ühikut; valige Wh või kWh, et seada see eraldi.",
     energyUnitAuto: "Automaatne",
+    unitAdaptive: "Kohanduv",
     irradianceUnit: "Päikesekonstandi ühik",
     irradianceUnitHelp:
       "Ühik päikesekonstandi (kiirgustugevuse) näidu jaoks päikese kohal.",
@@ -188,6 +189,16 @@ export const et: Translations = {
       "Kodu tarbimine: kuvatud, tuletatud ülaltoodud otseandmetega perekondadest.",
     liveHomeNote:
       "Kodu tarbimine: ilmub siis, kui igal ülaltoodud seadistatud perekonnal on oma otseandmete andur.",
+    liveForecastOk:
+      "Prognoos: igale päikeseallikale on lisatud pakkuja.",
+    liveForecastPartial:
+      "Prognoos: {n} teie päikeseallikal puudub pakkuja, seega lubab kõver vähem, kui te toodate. Lisage sinna Helios Forecast: Seaded > Töölauad > Energia > Päikesepaneelid.",
+    liveForecastMissing:
+      "Prognoos: päikeseallikal pole pakkujat, seega kõver lõpeb praegusega. Paigaldage Helios Forecast ja lisage see: Seaded > Töölauad > Energia > Päikesepaneelid.",
+    liveHouseOk:
+      "Maja: selle piirjoon on kaardil ja vaade on sellele keskendatud.",
+    liveHouseMissing:
+      "Maja: teie koordinaatidel pole kaardil hoonet, seega on selle asemel üldine maja. Lisage oma maja OpenStreetMapi või parandage punkt jaotises Maja asukoht.",
     openEnergyConfig: "Ava energia seadistus",
     buildingsSection: "Kodu ja hooned",
     buildingsHint:

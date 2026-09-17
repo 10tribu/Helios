@@ -108,11 +108,12 @@ export const hr: Translations = {
       "Broj decimalnih mjesta prikazanih uz svaku vrijednost, da čipovi izgledaju ujednačeno. Odnosi se na vrijednosti u kW (cijeli vati ostaju bez decimala) i na kWh. 0 do 3, zadano 1.",
     powerUnit: "Jedinica snage",
     powerUnitHelp:
-      "Jedinica za svako očitanje snage na kartici (čipovi, opisi u grafu). Energija je slijedi, pa kartica ostaje dosljedna: kW ide uz kWh, W uz Wh.",
+      "Jedinica za svako očitanje snage na kartici (čipovi, opisi u grafu). Energija je slijedi, pa kartica ostaje dosljedna: kW ide uz kWh, W uz Wh. Prilagodljiva bira jedinicu za svaku vrijednost: vati ispod kilovata, kilovati iznad.",
     energyUnit: "Jedinica energije",
     energyUnitHelp:
       "Jedinica za sve ukupne vrijednosti energije (dnevna krivulja, ploča s detaljima, dnevni zbrojevi na vremenskoj traci). Automatski prati jedinicu snage iznad; odaberite Wh ili kWh za zasebno postavljanje.",
     energyUnitAuto: "Automatski",
+    unitAdaptive: "Prilagodljiva",
     irradianceUnit: "Jedinica solarne konstante",
     irradianceUnitHelp:
       "Jedinica za očitanje solarne konstante (ozračenja) iznad sunca.",
@@ -188,6 +189,16 @@ export const hr: Translations = {
       "Potrošnja doma: prikazana, izvedena iz gornjih obitelji uživo.",
     liveHomeNote:
       "Potrošnja doma pojavljuje se čim svaka gore konfigurirana obitelj ima svoj senzor uživo.",
+    liveForecastOk:
+      "Prognoza: svakom solarnom izvoru pridružen je pružatelj.",
+    liveForecastPartial:
+      "Prognoza: kod {n} vaših solarnih izvora nedostaje pružatelj pa krivulja najavljuje manje nego što ćete proizvesti. Ondje dodajte Helios Forecast u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
+    liveForecastMissing:
+      "Prognoza: solarni izvor nema pružatelja pa krivulja staje na sada. Instalirajte Helios Forecast i pridružite ga u Postavke > Nadzorne ploče > Energija > Solarni paneli.",
+    liveHouseOk:
+      "Kuća: njezin obris je na karti, a prizor je centriran na njega.",
+    liveHouseMissing:
+      "Kuća: na vašim koordinatama na karti nema zgrade, pa je zamjenjuje opća kuća. Dodajte svoju kuću u OpenStreetMap ili ispravite točku u odjeljku Lokacija kuće.",
     openEnergyConfig: "Otvori konfiguraciju energije",
     buildingsSection: "Dom i zgrade",
     buildingsHint:

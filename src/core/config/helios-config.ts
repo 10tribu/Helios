@@ -13,6 +13,7 @@ import {
     SCENE_ZOOM_LEVELS, DEFAULT_SCENE_ZOOM,
 } from './constants';
 import { clamp } from '../render-kit/math';
+import type { PowerUnit, EnergyUnit } from '../format/format';
 
 export {
     DEFAULT_BUILDING_OPACITY,
@@ -33,8 +34,10 @@ export {
 //`unknown`; callers validate/coerce, and the DEFAULT_* consts below fill in absent keys.
 export interface HeliosConfig
 {
-    //Index signature so unknown keys read as `unknown` without widening errors; the editor strips any
-    //key not in the named schema below on save.
+    //Index signature so unknown keys read as `unknown` without widening errors. The named keys below are the
+    //schema: every option the card reads is declared here, and docs/CONFIGURATION.md documents the same set.
+    //The editor removes a short list of keys from superseded releases on save (its LEGACY_KEYS); everything
+    //else a dashboard carries is left alone.
     [key: string]: unknown;
     //Storage + render cadence in buckets/hour for the unified data source and every graph. Range 1-6,
     //default 4 (15 min). Higher = finer curves at more CPU/memory. Forecast stays hourly, then interpolated.
@@ -134,11 +137,23 @@ export interface HeliosConfig
     'cache-id'?:                unknown;
     //Power readout unit for the whole card: 'W' or 'kW'. Default 'kW'. Energy totals follow it by default
     //('energy-unit' absent or 'auto'), unless 'energy-unit' is set on its own.
+    //'adaptive' leaves the choice to each value: watts below a kilowatt, kilowatts above.
     'power-unit'?:             unknown;
-    //Energy total unit: 'auto' (follow power-unit, the default), 'Wh' or 'kWh'.
+    //Energy total unit: 'auto' (follow power-unit, the default), 'Wh', 'kWh' or 'adaptive'.
     'energy-unit'?:            unknown;
     //Irradiance (solar constant) readout unit: 'W/m²', 'kW/m²' or 'W/ft²'. Default 'W/m²'.
     'irradiance-unit'?:        unknown;
+    //Decimal places on every value readout, clamped [0,3]. See valueDecimals().
+    'value-decimals'?:         unknown;
+    //Peak power (W) the flow animations normalise their speed against. See maxExpectedPower().
+    'max-expected-power'?:     unknown;
+    //Cost readout on the chips and in the detail panel. Default shown.
+    'show-cost'?:              unknown;
+    //Compatibility rendering: simpler compositing for devices whose browser flickers under the normal path.
+    'degraded-render'?:        unknown;
+    //Basemap polarity: 'auto' (follow the Home Assistant theme), 'dark', 'light', or 'custom' to use the
+    //per-layer map-color-<layer> / map-show-<layer> keys.
+    'map-theme-mode'?:         unknown;
     //Battery chip sign convention: 'default' (- charging, + discharging), 'inverted' (+ charging,
     //- discharging), or 'hidden' (magnitude only). Display-only; flow direction and history are unchanged.
     'battery-sign'?:           unknown;
@@ -230,16 +245,27 @@ export function maxExpectedPowerW(config: HeliosConfig | undefined): number
 }
 
 
-//Resolved power readout unit ('W' or 'kW') for every power value on the card. Default 'kW'.
-export function powerUnit(config: HeliosConfig | undefined): 'W' | 'kW'
+//Resolved power readout unit for every power value on the card. Default 'kW'. 'adaptive' is not a unit but a
+//rule: the formatter picks watts or kilowatts from the value itself, so a device that swings between two
+//kilowatts and eighty watts reads right at both ends instead of printing one of them as zero.
+export function powerUnit(config: HeliosConfig | undefined): PowerUnit
 {
-    return config?.['power-unit'] === 'W' ? 'W' : 'kW';
+    const raw = config?.['power-unit'];
+    if (raw === 'W')
+    {
+        return 'W';
+    }
+    if (raw === 'adaptive')
+    {
+        return 'adaptive';
+    }
+    return 'kW';
 }
 
 
-//Resolved energy total unit ('Wh' or 'kWh'). Explicit 'energy-unit' wins; absent or 'auto' mirrors powerUnit
-//(kW -> kWh, W -> Wh).
-export function energyUnit(config: HeliosConfig | undefined): 'Wh' | 'kWh'
+//Resolved energy total unit. Explicit 'energy-unit' wins; absent or 'auto' mirrors powerUnit (kW -> kWh,
+//W -> Wh, adaptive -> adaptive), so choosing the rule once applies it to both families.
+export function energyUnit(config: HeliosConfig | undefined): EnergyUnit
 {
     const raw = config?.['energy-unit'];
     if (raw === 'Wh')
@@ -250,7 +276,16 @@ export function energyUnit(config: HeliosConfig | undefined): 'Wh' | 'kWh'
     {
         return 'kWh';
     }
-    return powerUnit(config) === 'W' ? 'Wh' : 'kWh';
+    if (raw === 'adaptive')
+    {
+        return 'adaptive';
+    }
+    const power = powerUnit(config);
+    if (power === 'adaptive')
+    {
+        return 'adaptive';
+    }
+    return power === 'W' ? 'Wh' : 'kWh';
 }
 
 
@@ -519,7 +554,7 @@ export type MapThemeMode = 'auto' | 'dark' | 'light' | 'custom';
 //the per-layer colours + visibility below.
 export function mapThemeMode(config: HeliosConfig | undefined): MapThemeMode
 {
-    const v = (config as Record<string, unknown> | undefined)?.['map-theme-mode'];
+    const v = config?.['map-theme-mode'];
     return v === 'dark' || v === 'light' || v === 'custom' ? v : 'auto';
 }
 

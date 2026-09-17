@@ -108,11 +108,12 @@ export const fi: Translations = {
       "Jokaisessa arvolukemassa näytettävien desimaalien määrä, jotta sirut näkyvät yhtenäisinä. Koskee kW-arvoja (kokonaiset watit pysyvät kokonaislukuina) ja kWh-arvoja. 0-3, oletus 1.",
     powerUnit: "Tehon yksikkö",
     powerUnitHelp:
-      "Yksikkö jokaiselle kortin teholukemalle (sirut, kaavion työkaluvihjeet). Energia noudattaa sitä myös, joten kortti pysyy yhtenäisenä: kW yhdistyy kWh:hon, W Wh:hon.",
+      "Yksikkö jokaiselle kortin teholukemalle (sirut, kaavion työkaluvihjeet). Energia noudattaa sitä myös, joten kortti pysyy yhtenäisenä: kW yhdistyy kWh:hon, W Wh:hon. Mukautuva valitsee yksikön arvokohtaisesti: watteja alle kilowatin, kilowatteja sen yli.",
     energyUnit: "Energiayksikkö",
     energyUnitHelp:
       "Yksikkö kaikille energian summille (päiväkäyrä, tietopaneeli, aikajanan päiväsummat). Automaattinen noudattaa yllä olevaa tehon yksikköä; valitse Wh tai kWh asettaaksesi sen erikseen.",
     energyUnitAuto: "Automaattinen",
+    unitAdaptive: "Mukautuva",
     irradianceUnit: "Aurinkovakion yksikkö",
     irradianceUnitHelp:
       "Yksikkö auringon yläpuolella olevalle aurinkovakion (irradianssin) lukemalle.",
@@ -188,6 +189,16 @@ export const fi: Translations = {
       "Kodin kulutus: näytetään, johdettu yllä olevista live-perheistä.",
     liveHomeNote:
       "Kodin kulutus näkyy, kun jokaisella yllä määritetyllä perheellä on live-anturinsa.",
+    liveForecastOk:
+      "Ennuste: jokaiseen aurinkolähteeseen on liitetty tarjoaja.",
+    liveForecastPartial:
+      "Ennuste: {n} aurinkolähteeltäsi puuttuu tarjoaja, joten käyrä lupaa vähemmän kuin tuotat. Lisää sinne Helios Forecast kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
+    liveForecastMissing:
+      "Ennuste: aurinkolähteelläsi ei ole tarjoajaa, joten käyrä pysähtyy nykyhetkeen. Asenna Helios Forecast ja liitä se kohdassa Asetukset > Koontinäytöt > Energia > Aurinkopaneelit.",
+    liveHouseOk:
+      "Talo: sen ääriviiva on kartalla, ja näkymä on keskitetty siihen.",
+    liveHouseMissing:
+      "Talo: koordinaateissasi ei ole kartalla rakennusta, joten sen tilalla on yleinen talo. Lisää talosi OpenStreetMapiin tai korjaa piste kohdassa Talon sijainti.",
     openEnergyConfig: "Avaa Energia-asetukset",
     buildingsSection: "Koti & rakennukset",
     buildingsHint:

@@ -108,11 +108,12 @@ export const ro: Translations = {
       "Numarul de zecimale afisate la fiecare valoare, astfel incat cipurile sa arate uniform. Se aplica valorilor in kW (watii intregi raman intregi) si celor in kWh. De la 0 la 3, implicit 1.",
     powerUnit: "Unitate de putere",
     powerUnitHelp:
-      "Unitatea pentru fiecare citire a puterii de pe card (cipuri, indicii graficului). Energia o urmeaza si ea, astfel incat cardul ramane consecvent: kW se imperecheaza cu kWh, W cu Wh.",
+      "Unitatea pentru fiecare citire a puterii de pe card (cipuri, indicii graficului). Energia o urmeaza si ea, astfel incat cardul ramane consecvent: kW se imperecheaza cu kWh, W cu Wh. Adaptivă alege unitatea pentru fiecare valoare: wați sub un kilowatt, kilowați peste.",
     energyUnit: "Unitate de energie",
     energyUnitHelp:
       "Unitate pentru fiecare total de energie (curba zilei, panoul de detalii, totalurile zilnice din cronologie). Automat urmează unitatea de putere de mai sus; alegeți Wh sau kWh pentru a o seta separat.",
     energyUnitAuto: "Automat",
+    unitAdaptive: "Adaptivă",
     irradianceUnit: "Unitatea constantei solare",
     irradianceUnitHelp:
       "Unitatea pentru citirea constantei solare (iradiere) de deasupra soarelui.",
@@ -187,6 +188,16 @@ export const ro: Translations = {
     liveHomeOk: "Consum casa: afisat, derivat din familiile live de mai sus.",
     liveHomeNote:
       "Consum casa: apare de indata ce fiecare familie configurata mai sus are senzorul sau live.",
+    liveForecastOk:
+      "Prognoză: fiecărei surse solare îi este atașat un furnizor.",
+    liveForecastPartial:
+      "Prognoză: lipsește un furnizor la {n} dintre sursele dumneavoastră solare, deci curba anunță mai puțin decât veți produce. Adăugați acolo Helios Forecast în Setări > Tablouri de bord > Energie > Panouri solare.",
+    liveForecastMissing:
+      "Prognoză: niciun furnizor pe sursa solară, deci curba se oprește la prezent. Instalați Helios Forecast și atașați-l în Setări > Tablouri de bord > Energie > Panouri solare.",
+    liveHouseOk:
+      "Casa: conturul ei este pe hartă, iar scena este centrată pe el.",
+    liveHouseMissing:
+      "Casa: nu există nicio clădire pe hartă la coordonatele dumneavoastră, așa că o casă generică îi ține locul. Adăugați-vă casa în OpenStreetMap sau corectați punctul în secțiunea Amplasarea casei.",
     openEnergyConfig: "Deschide configuratia Energie",
     buildingsSection: "Casa si cladiri",
     buildingsHint:

@@ -94,11 +94,12 @@ export const en: Translations = {
     sunChipModePosition: "Sun position",
     powerUnit: "Power unit",
     powerUnitHelp:
-      "Unit for every power readout on the card (chips, graph tooltips). Energy follows it by default too (kW pairs with kWh, W with Wh), unless you set an energy unit of its own below.",
+      "Unit for every power readout on the card (chips, graph tooltips). Energy follows it by default too (kW pairs with kWh, W with Wh), unless you set an energy unit of its own below. Adaptive picks the unit value by value: watts below a kilowatt, kilowatts above.",
     energyUnit: "Energy unit",
     energyUnitHelp:
       "Unit for every energy total (the day curve, the detail panel, the timeline's day totals). Auto follows the power unit above; pick Wh or kWh to set it on its own.",
     energyUnitAuto: "Auto",
+    unitAdaptive: "Adaptive",
     irradianceUnit: "Solar constant unit",
     irradianceUnitHelp:
       "Unit for the solar constant (irradiance) readout above the sun.",
@@ -198,6 +199,16 @@ export const en: Translations = {
       "Home consumption: shown, derived from the live families above.",
     liveHomeNote:
       "Home consumption: appears once every configured family above has its live sensor.",
+    liveForecastOk:
+      "Forecast: a provider is attached to every solar source.",
+    liveForecastPartial:
+      "Forecast: a provider is missing on {n} of your solar sources, so the curve announces less than you will produce. Add Helios Forecast there, under Settings > Dashboards > Energy > Solar panels.",
+    liveForecastMissing:
+      "Forecast: no provider on your solar source, so the curve stops at now. Install Helios Forecast and attach it under Settings > Dashboards > Energy > Solar panels.",
+    liveHouseOk:
+      "House: its outline is on the map, and the scene is centred on it.",
+    liveHouseMissing:
+      "House: no building on the map at your coordinates, so a generic house stands in for it. Add your house to OpenStreetMap, or correct the point in the Home location section.",
     openEnergyConfig: "Open Energy configuration",
     buildingsSection: "Home & buildings",
     buildingsHint:

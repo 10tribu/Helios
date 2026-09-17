@@ -108,11 +108,12 @@ export const it: Translations = {
       "Numero di decimali mostrati su ogni valore, così i chip restano uniformi. Si applica ai valori in kW (i watt interi restano interi) e ai kWh. Da 0 a 3, predefinito 1.",
     powerUnit: "Unità di potenza",
     powerUnitHelp:
-      "Unità per ogni lettura di potenza sulla scheda (chip, tooltip del grafico). Anche l'energia la segue, così la scheda resta coerente: kW si abbina a kWh, W a Wh.",
+      "Unità per ogni lettura di potenza sulla scheda (chip, tooltip del grafico). Anche l'energia la segue, così la scheda resta coerente: kW si abbina a kWh, W a Wh. Adattiva sceglie l'unità valore per valore: watt sotto il kilowatt, kilowatt sopra.",
     energyUnit: "Unità di energia",
     energyUnitHelp:
       "Unità per ogni totale di energia (la curva del giorno, il pannello dei dettagli, i totali giornalieri della timeline). Automatico segue l'unità di potenza sopra; scegli Wh o kWh per impostarla separatamente.",
     energyUnitAuto: "Automatico",
+    unitAdaptive: "Adattiva",
     irradianceUnit: "Unità della costante solare",
     irradianceUnitHelp:
       "Unità per la lettura della costante solare (irraggiamento) sopra il sole.",
@@ -187,6 +188,16 @@ export const it: Translations = {
     liveHomeOk: "Consumo casa: mostrato, derivato dalle famiglie live sopra.",
     liveHomeNote:
       "Consumo casa: compare quando ogni famiglia configurata sopra ha il proprio sensore live.",
+    liveForecastOk:
+      "Previsione: ogni fonte solare ha un fornitore collegato.",
+    liveForecastPartial:
+      "Previsione: manca un fornitore su {n} delle sue fonti solari, quindi la curva annuncia meno di quanto produrrà. Vi aggiunga Helios Forecast in Impostazioni > Dashboard > Energia > Pannelli solari.",
+    liveForecastMissing:
+      "Previsione: nessun fornitore sulla fonte solare, la curva si ferma quindi al presente. Installi Helios Forecast e lo colleghi in Impostazioni > Dashboard > Energia > Pannelli solari.",
+    liveHouseOk:
+      "Casa: il suo contorno è sulla mappa e la scena è centrata su di esso.",
+    liveHouseMissing:
+      "Casa: nessun edificio sulla mappa alle sue coordinate, quindi al suo posto viene disegnata una casa generica. Aggiunga la sua casa a OpenStreetMap, oppure corregga il punto nella sezione Posizione della casa.",
     openEnergyConfig: "Apri configurazione Energia",
     buildingsSection: "Casa ed edifici",
     buildingsHint:
